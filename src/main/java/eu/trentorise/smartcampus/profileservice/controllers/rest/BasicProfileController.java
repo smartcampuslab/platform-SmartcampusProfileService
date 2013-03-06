@@ -37,6 +37,7 @@ import eu.trentorise.smartcampus.ac.provider.model.User;
 import eu.trentorise.smartcampus.profileservice.managers.CommunityManagerException;
 import eu.trentorise.smartcampus.profileservice.managers.ProfileManager;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
+import eu.trentorise.smartcampus.profileservice.model.BasicProfiles;
 
 @Controller("basicProfileController")
 public class BasicProfileController extends RestController {
@@ -64,15 +65,20 @@ public class BasicProfileController extends RestController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/eu.trentorise.smartcampus.profileservice.model.BasicProfile")
 	public @ResponseBody
-	List<BasicProfile> searchUsers(HttpServletRequest request, HttpServletResponse response, HttpSession session, @RequestParam(value = "filter", required = false) String fullNameFilter) throws CommunityManagerException, IOException {
+	BasicProfiles searchUsers(HttpServletRequest request, HttpServletResponse response, HttpSession session, @RequestParam(value = "filter", required = false) String fullNameFilter) throws CommunityManagerException, IOException {
 		try {
+			List<BasicProfile> list;
 			if (fullNameFilter != null && !fullNameFilter.isEmpty()) {
-				return profileManager.getUsers(fullNameFilter);
+				list = profileManager.getUsers(fullNameFilter);
 
 			} else {
-				List<BasicProfile> list = profileManager.getUsers();
-				return list;
+				list = profileManager.getUsers();
 			}
+			
+			BasicProfiles profiles = new BasicProfiles();
+			profiles.setProfiles(list);
+			return profiles;
+			
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			return null;
