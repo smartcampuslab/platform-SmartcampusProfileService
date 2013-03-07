@@ -53,6 +53,16 @@ public class ProfileStorage extends BasicObjectSyncMongoStorage {
 		}
 	}	
 	
+	public List<ExtendedProfile> findExtendedProfiles(String userId, String appId) {
+		Criteria criteria = new Criteria();
+		criteria = Criteria.where("content.userId").is(userId).and("content.appId").is(appId);
+		criteria.and("type").is(ExtendedProfile.class.getCanonicalName());
+		criteria.and("deleted").is(false);
+		
+		List<ExtendedProfile> profiles = find(Query.query(criteria), ExtendedProfile.class);
+		return profiles;
+	}		
+	
 	public void deleteExtendedProfile(String userId, String appId, String profileId) throws DataException {
 		Criteria criteria = new Criteria();
 		criteria = Criteria.where("content.userId").is(userId).and("content.appId").is(appId).and("content.profileId").is(profileId);

@@ -1,6 +1,7 @@
 package eu.trentorise.smartcampus.profileservice.controllers.rest;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import eu.trentorise.smartcampus.ac.provider.model.User;
 import eu.trentorise.smartcampus.profileservice.managers.CommunityManagerException;
 import eu.trentorise.smartcampus.profileservice.model.ExtendedProfile;
+import eu.trentorise.smartcampus.profileservice.model.ExtendedProfiles;
 import eu.trentorise.smartcampus.profileservice.storage.ProfileStorage;
 
 @Controller("extendedProfileController")
@@ -84,6 +86,30 @@ public class ExtendedProfileController extends RestController {
 			return null;
 		}
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/{userId}/{appId}")
+	public @ResponseBody
+	ExtendedProfiles getExtendedProfiles(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("userId") String userId, @PathVariable("appId") String appId) throws IOException, CommunityManagerException {
+		try {
+			User user = retrieveUser(request, response);
+			String id = Long.toString(user.getId());
+
+			if (!id.equals(userId)) {
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				return null;
+			}
+
+			List<ExtendedProfile> profiles = storage.findExtendedProfiles(userId, appId);
+			ExtendedProfiles ext = new ExtendedProfiles();
+			ext.setProfiles(profiles);
+			
+			return ext;
+
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return null;
+		}
+	}	
 
 	@RequestMapping(method = RequestMethod.PUT, value = "/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/{userId}/{appId}/{profileId}")
 	public void updateExtendedProfile(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("userId") String userId, @PathVariable("appId") String appId, @PathVariable("profileId") String profileId, @RequestBody Map<String, Object> content) throws IOException, CommunityManagerException {
