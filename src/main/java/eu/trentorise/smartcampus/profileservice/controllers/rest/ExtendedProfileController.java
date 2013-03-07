@@ -56,6 +56,7 @@ public class ExtendedProfileController extends RestController {
 			extProfile.setUserId(id);
 			extProfile.setContent(content);
 			extProfile.setUser(id);
+			extProfile.setUpdateTime(System.currentTimeMillis());
 
 			storage.storeObject(extProfile);
 
@@ -104,6 +105,7 @@ public class ExtendedProfileController extends RestController {
 
 			profile.setUpdateTime(System.currentTimeMillis());
 			profile.setContent(content);
+			profile.setUpdateTime(System.currentTimeMillis());
 			storage.updateObject(profile);
 			
 
