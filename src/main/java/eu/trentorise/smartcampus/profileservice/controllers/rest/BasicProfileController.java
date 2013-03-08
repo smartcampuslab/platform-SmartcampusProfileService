@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.ac.provider.model.User;
-import eu.trentorise.smartcampus.profileservice.managers.CommunityManagerException;
 import eu.trentorise.smartcampus.profileservice.managers.ProfileManager;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfiles;
@@ -51,7 +50,7 @@ public class BasicProfileController extends RestController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/eu.trentorise.smartcampus.profileservice.model.BasicProfile/{userId}")
 	public @ResponseBody
-	BasicProfile getUser(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("userId") String userId) throws IOException, CommunityManagerException {
+	BasicProfile getUser(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("userId") String userId) throws IOException {
 		try {
 			User user = retrieveUser(request, response);
 
@@ -65,7 +64,7 @@ public class BasicProfileController extends RestController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/eu.trentorise.smartcampus.profileservice.model.BasicProfile")
 	public @ResponseBody
-	BasicProfiles searchUsers(HttpServletRequest request, HttpServletResponse response, HttpSession session, @RequestParam(value = "filter", required = false) String fullNameFilter) throws CommunityManagerException, IOException {
+	BasicProfiles searchUsers(HttpServletRequest request, HttpServletResponse response, HttpSession session, @RequestParam(value = "filter", required = false) String fullNameFilter) throws IOException {
 		try {
 			List<BasicProfile> list;
 			if (fullNameFilter != null && !fullNameFilter.isEmpty()) {
@@ -87,7 +86,7 @@ public class BasicProfileController extends RestController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/eu.trentorise.smartcampus.profileservice.model.BasicProfile/me")
 	public @ResponseBody
-	BasicProfile findProfile(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException, CommunityManagerException {
+	BasicProfile findProfile(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
 		try {
 			User user = retrieveUser(request, response);
 			return profileManager.getOrCreateProfile(user);
