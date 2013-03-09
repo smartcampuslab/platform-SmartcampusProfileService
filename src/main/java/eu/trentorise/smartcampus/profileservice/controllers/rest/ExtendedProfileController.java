@@ -26,8 +26,6 @@ import eu.trentorise.smartcampus.profileservice.storage.ProfileStorage;
 @Controller("extendedProfileController")
 public class ExtendedProfileController extends RestController {
 
-	private static final Logger logger = Logger.getLogger(ExtendedProfileController.class);
-
 	// @Autowired
 	// private ProfileManager profileManager;
 
@@ -38,6 +36,12 @@ public class ExtendedProfileController extends RestController {
 	public void createExtendedProfile(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("userId") String userId, @PathVariable("appId") String appId, @PathVariable("profileId") String profileId, @RequestBody Map<String, Object> content) throws IOException, CommunityManagerException {
 		try {
 			User user = retrieveUser(request, response);
+			// User should not be null
+			if (user == null) {
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				return;
+			}
+
 			String id = Long.toString(user.getId());
 
 			if (!id.equals(userId)) {
@@ -72,6 +76,11 @@ public class ExtendedProfileController extends RestController {
 	ExtendedProfile getExtendedProfile(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("userId") String userId, @PathVariable("appId") String appId, @PathVariable("profileId") String profileId) throws IOException, CommunityManagerException {
 		try {
 			User user = retrieveUser(request, response);
+			// User should not be null
+			if (user == null) {
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				return null;
+			}
 			String id = Long.toString(user.getId());
 
 			if (!id.equals(userId)) {
@@ -92,6 +101,12 @@ public class ExtendedProfileController extends RestController {
 	ExtendedProfiles getExtendedProfiles(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("userId") String userId, @PathVariable("appId") String appId) throws IOException, CommunityManagerException {
 		try {
 			User user = retrieveUser(request, response);
+			// User should not be null
+			if (user == null) {
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				return null;
+			}
+
 			String id = Long.toString(user.getId());
 
 			if (!id.equals(userId)) {
@@ -115,6 +130,12 @@ public class ExtendedProfileController extends RestController {
 	public void updateExtendedProfile(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("userId") String userId, @PathVariable("appId") String appId, @PathVariable("profileId") String profileId, @RequestBody Map<String, Object> content) throws IOException, CommunityManagerException {
 		try {
 			User user = retrieveUser(request, response);
+			// User should not be null
+			if (user == null) {
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				return;
+			}
+
 			String id = Long.toString(user.getId());
 
 			if (!id.equals(userId)) {
@@ -144,6 +165,11 @@ public class ExtendedProfileController extends RestController {
 	public void deleteExtendedProfile(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("userId") String userId, @PathVariable("appId") String appId, @PathVariable("profileId") String profileId) throws IOException, CommunityManagerException {
 		try {
 			User user = retrieveUser(request, response);
+			// User should not be null
+			if (user == null) {
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				return;
+			}
 			String id = Long.toString(user.getId());
 
 			if (!id.equals(userId)) {

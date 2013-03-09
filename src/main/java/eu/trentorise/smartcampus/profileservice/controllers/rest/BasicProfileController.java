@@ -49,6 +49,11 @@ public class BasicProfileController extends RestController {
 	BasicProfile getUser(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("userId") String userId) throws IOException {
 		try {
 			User user = retrieveUser(request, response);
+			// User should not be null: only known users can access the service
+			if (user == null) {
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				return null;
+			}
 
 			return profileManager.getBasicProfileById(userId);
 		} catch (Exception e) {
@@ -61,7 +66,15 @@ public class BasicProfileController extends RestController {
 	@RequestMapping(method = RequestMethod.GET, value = "/eu.trentorise.smartcampus.profileservice.model.BasicProfile")
 	public @ResponseBody
 	BasicProfiles searchUsers(HttpServletRequest request, HttpServletResponse response, HttpSession session, @RequestParam(value = "filter", required = false) String fullNameFilter) throws IOException {
+
 		try {
+			User user = retrieveUser(request, response);
+			// User should not be null: only known users can access the service
+			if (user == null) {
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				return null;
+			}
+
 			List<BasicProfile> list;
 			if (fullNameFilter != null && !fullNameFilter.isEmpty()) {
 				list = profileManager.getUsers(fullNameFilter);
@@ -85,6 +98,10 @@ public class BasicProfileController extends RestController {
 	BasicProfile findProfile(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
 		try {
 			User user = retrieveUser(request, response);
+			if (user == null) {
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				return null;
+			}
 			return profileManager.getOrCreateProfile(user);
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
