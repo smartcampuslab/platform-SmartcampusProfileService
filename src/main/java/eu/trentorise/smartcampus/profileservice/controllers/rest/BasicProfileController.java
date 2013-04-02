@@ -32,23 +32,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.ac.provider.model.User;
+import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.profileservice.managers.ProfileManager;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfiles;
 
 @Controller("basicProfileController")
-public class BasicProfileController extends RestController {
+public class BasicProfileController extends SCController {
 
-	private static final Logger logger = Logger.getLogger(BasicProfileController.class);
+	private static final Logger logger = Logger
+			.getLogger(BasicProfileController.class);
 
 	@Autowired
 	private ProfileManager profileManager;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/eu.trentorise.smartcampus.profileservice.model.BasicProfile/{userId}")
 	public @ResponseBody
-	BasicProfile getUser(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("userId") String userId) throws IOException {
+	BasicProfile getUser(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("userId") String userId) throws IOException {
 		try {
-			User user = retrieveUser(request, response);
+			User user = retrieveUser(request);
 			// User should not be null: only known users can access the service
 			if (user == null) {
 				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -65,10 +69,15 @@ public class BasicProfileController extends RestController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/eu.trentorise.smartcampus.profileservice.model.BasicProfile")
 	public @ResponseBody
-	BasicProfiles searchUsers(HttpServletRequest request, HttpServletResponse response, HttpSession session, @RequestParam(value = "filter", required = false) String fullNameFilter) throws IOException {
+	BasicProfiles searchUsers(
+			HttpServletRequest request,
+			HttpServletResponse response,
+			HttpSession session,
+			@RequestParam(value = "filter", required = false) String fullNameFilter)
+			throws IOException {
 
 		try {
-			User user = retrieveUser(request, response);
+			User user = retrieveUser(request);
 			// User should not be null: only known users can access the service
 			if (user == null) {
 				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -82,11 +91,11 @@ public class BasicProfileController extends RestController {
 			} else {
 				list = profileManager.getUsers();
 			}
-			
+
 			BasicProfiles profiles = new BasicProfiles();
 			profiles.setProfiles(list);
 			return profiles;
-			
+
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			return null;
@@ -95,9 +104,11 @@ public class BasicProfileController extends RestController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/eu.trentorise.smartcampus.profileservice.model.BasicProfile/me")
 	public @ResponseBody
-	BasicProfile findProfile(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
+	BasicProfile findProfile(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+			throws IOException {
 		try {
-			User user = retrieveUser(request, response);
+			User user = retrieveUser(request);
 			if (user == null) {
 				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 				return null;
@@ -109,4 +120,22 @@ public class BasicProfileController extends RestController {
 		}
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value = "/profiles")
+	public @ResponseBody
+	List<BasicProfile> findProfiles(HttpServletRequest request,
+			HttpServletResponse response, @RequestParam List<String> userIds) {
+		User user = null;
+		try {
+			user = retrieveUser(request);
+			if (user == null) {
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				return null;
+			}
+			return profileManager.getUsers(userIds);
+		} catch (Exception e) {
+			logger.error(e);
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return null;
+		}
+	}
 }

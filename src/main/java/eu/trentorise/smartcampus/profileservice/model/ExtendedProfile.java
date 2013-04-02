@@ -23,15 +23,22 @@ import eu.trentorise.smartcampus.presentation.data.BasicObject;
 
 @XmlRootElement(name = "ExtendedProfile")
 public class ExtendedProfile extends BasicObject {
-	
+
 	private static final long serialVersionUID = -6213454306656243304L;
-	
+
 	private String appId;
+	/**
+	 * profile label
+	 */
 	private String profileId;
-	
+
 	private Map<String, Object> content;
-	
+
 	private String userId;
+	/**
+	 * profile social id
+	 */
+	private long socialId;
 
 	public String getAppId() {
 		return appId;
@@ -65,6 +72,12 @@ public class ExtendedProfile extends BasicObject {
 		this.userId = userId;
 	}
 
-	
-	
+	public long getSocialId() {
+		return socialId;
+	}
+
+	public void setSocialId(long socialId) {
+		this.socialId = socialId;
+	}
+
 }
