@@ -206,6 +206,8 @@ public class ExtendedProfileController extends SCController {
 
 			ExtendedProfile profile = storage.findExtendedProfile(userId,
 					appId, profileId);
+			
+			if (profile == null) return null;
 
 			if (!permissionManager
 					.checkExtendedProfilePermission(user, profile)) {
