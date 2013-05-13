@@ -175,7 +175,7 @@ public class ProfileManager extends SocialEngineConnector {
 			Entity entity = SemanticHelper.createEntity(
 					socialEngineClient,
 					user.getSocialId(),
-					"entity",
+					"profile",
 					"profileId:" + extProfile.getProfileId(),
 					"appId:" + extProfile.getAppId() + ",userId:"
 							+ extProfile.getUserId(), null, null);
