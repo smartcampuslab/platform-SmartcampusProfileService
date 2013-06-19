@@ -34,7 +34,6 @@
 	<bean id="resourceFilter" class="eu.trentorise.smartcampus.resourceprovider.filter.ResourceFilter">
 	    <property name="dataSource" ref="dataSource" />
 	    <property name="uriManager" ref="uriManager" />
-	    	<property name="tagProviderFile" ref="tagProviderFile"/>
     </bean>	
 
 	
@@ -43,8 +42,9 @@
 	
 	
 	<bean id="uriManager" class="eu.trentorise.smartcampus.resourceprovider.uri.UriManager">
-	    <property name="contextPath" value="/profileservice" />
-	    <property name="serviceId" value="smartcampus.profile.basicprofile" />
+	    <property name="contextPath" value="/smartcampus.profile" />
+	    <property name="serviceId" value="smartcampus.profile" />
+	    <property name="tagProviderFile" ref="tagProviderFile"/>
     </bean>
 
 	

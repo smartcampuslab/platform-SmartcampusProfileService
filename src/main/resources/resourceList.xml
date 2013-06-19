@@ -14,13 +14,13 @@
 
 	<resourceMapping id="smartcampus.profile.basicprofile.me"
 		uri="smartcampus.profile.basicprofile.me"
-		pathPatterns="/profileservice/eu.trentorise.smartcampus.profileservice.model.BasicProfile/me"
+		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.BasicProfile/me"
 		authority="ROLE_USER">
 
 	</resourceMapping>
 	<resourceMapping id="smartcampus.profile.basicprofile.all"
 		uri="smartcampus.profile.basicprofile.all" authority="ROLE_CLIENT"
-		pathPatterns="profileservice/eu.trentorise.smartcampus.profileservice.model.BasicProfile">
+		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.BasicProfile">
 
 	</resourceMapping>
 
@@ -37,23 +37,23 @@
 
 	<resourceMapping id="smartcampus.extprofile.own"
 		uri="smartcampus.extprofile.write.{app}.{profile}" authority="ROLE_CLIENT"
-		pathPatterns="/profileservice/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/users/{app}/{profile}">
+		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/users/{app}/{profile}">
 
 	</resourceMapping>
 
 	<resourceMapping id="smartcampus.extprofile.me.read"
 		uri="smartcampus.extprofile.me.read" authority="ROLE_USER"
-		pathPatterns="/profileservice/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me">
+		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me">
 
 	</resourceMapping>
 	<resourceMapping id="smartcampus.extprofile.me.app.read"
 		uri="smartcampus.extprofile.me.{app}.read" authority="ROLE_CLIENT"
-		pathPatterns="/profileservice/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me/{app}">
+		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me/{app}">
 
 	</resourceMapping>
 	<resourceMapping id="smartcampus.extprofile.me.app.profile.read"
 		uri="smartcampus.extprofile.me.{app}.{profile}.read" authority="ROLE_USER"
-		pathPatterns="/profileservice/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me/{app}/{profile}">
+		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me/{app}/{profile}">
 
 	</resourceMapping>
 
@@ -61,32 +61,32 @@
 
 	<resourceMapping id="smartcampus.extprofile.shared.read"
 		uri="smartcampus.extprofile.shared.read" authority="ROLE_USER"
-		pathPatterns="/profileservice/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/shared">
+		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/shared">
 
 	</resourceMapping>
 	<resourceMapping id="smartcampus.extprofile.shared.app.read"
 		uri="smartcampus.extprofile.shared.{app}.read" authority="ROLE_USER"
-		pathPatterns="/profileservice/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/shared/{app}">
+		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/shared/{app}">
 
 	</resourceMapping>
 	<resourceMapping id="smartcampus.extprofile.shared.app.profile.read"
 		uri="smartcampus.extprofile.shared.{app}.{profile}.read" authority="ROLE_USER"
-		pathPatterns="/profileservice/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/shared/{app}/{profile}">
+		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/shared/{app}/{profile}">
 	</resourceMapping>
 
 
 	<resourceMapping id="smartcampus.extprofile.all.read"
 		uri="smartcampus.extprofile.all.read" authority="ROLE_CLIENT"
-		pathPatterns="/profileservice/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile">
+		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile">
 	</resourceMapping>
 	<resourceMapping id="smartcampus.extprofile.all.app.read"
 		uri="smartcampus.extprofile.all.{app}.read" authority="ROLE_ROLE_CLIENT"
-		pathPatterns="/profileservice/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/{app}">
+		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/{app}">
 
 	</resourceMapping>
 	<resourceMapping id="smartcampus.extprofile.all.app.profile.read"
 		uri="smartcampus.extprofile.all.{app}.{profile}.read" authority="ROLE_USER"
-		pathPatterns="/profileservice/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/{app}/{profile}">
+		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/{app}/{profile}">
 
 	</resourceMapping>
 

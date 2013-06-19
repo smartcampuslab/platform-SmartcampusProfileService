@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.trentorise.smartcampus</groupId>
-	<artifactId>profileservice</artifactId>
+	<artifactId>smartcampus.profile</artifactId>
 	<version>1.0</version>
 	<packaging>war</packaging>
 
@@ -90,7 +90,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>profileservice</finalName>
+		<finalName>smartcampus.profile</finalName>
 	</build>
 
 	<repositories>
