@@ -59,6 +59,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws CommunityManagerException
 	 */
+	// TODO client flow
 	@RequestMapping(method = RequestMethod.POST, value = "/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/{userId}/{appId}/{profileId}")
 	public void createExtendedProfile(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -114,65 +115,65 @@ public class ExtendedProfileController extends SCController {
 
 	}
 
-	/**
-	 * Creates a extended profile for an authenticated user, given an
-	 * application and a profileId
-	 * 
-	 * @param request
-	 * @param response
-	 * @param session
-	 * @param appId
-	 * @param profileId
-	 * @param content
-	 * @throws IOException
-	 * @throws CommunityManagerException
-	 */
-
-	@RequestMapping(method = RequestMethod.POST, value = "/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me/{appId}/{profileId}")
-	public void createMyExtendedProfile(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,
-			@PathVariable("appId") String appId,
-			@PathVariable("profileId") String profileId,
-			@RequestBody Map<String, Object> content) throws IOException,
-			CommunityManagerException {
-		User user = null;
-		try {
-			user = retrieveUser(request);
-			// User should not be null
-			if (user == null) {
-				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-				return;
-			}
-		} catch (SmartCampusException e1) {
-			logger.error("Error getting user", e1);
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-		}
-
-		ExtendedProfile extProfile = new ExtendedProfile();
-		extProfile.setAppId(appId);
-		extProfile.setProfileId(profileId);
-		extProfile.setUserId("" + user.getId());
-		extProfile.setContent(content);
-		extProfile.setUser("" + user.getId());
-		extProfile.setUpdateTime(System.currentTimeMillis());
-
-		try {
-			profileManager.create(user, extProfile);
-		} catch (AlreadyExistException e) {
-			logger.error(
-					String.format(
-							"Extended profile already exists userId:%s, appId:%s, profileId:%s",
-							"" + user.getId(), appId, profileId), e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			return;
-		} catch (SmartCampusException e) {
-			logger.error(
-					"General exception creating extended profile for user "
-							+ user.getId(), e);
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-
-	}
+//	/**
+//	 * Creates a extended profile for an authenticated user, given an
+//	 * application and a profileId
+//	 * 
+//	 * @param request
+//	 * @param response
+//	 * @param session
+//	 * @param appId
+//	 * @param profileId
+//	 * @param content
+//	 * @throws IOException
+//	 * @throws CommunityManagerException
+//	 */
+//	// TODO client flow
+//	@RequestMapping(method = RequestMethod.POST, value = "/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me/{appId}/{profileId}")
+//	public void createMyExtendedProfile(HttpServletRequest request,
+//			HttpServletResponse response, HttpSession session,
+//			@PathVariable("appId") String appId,
+//			@PathVariable("profileId") String profileId,
+//			@RequestBody Map<String, Object> content) throws IOException,
+//			CommunityManagerException {
+//		User user = null;
+//		try {
+//			user = retrieveUser(request);
+//			// User should not be null
+//			if (user == null) {
+//				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//				return;
+//			}
+//		} catch (SmartCampusException e1) {
+//			logger.error("Error getting user", e1);
+//			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//		}
+//
+//		ExtendedProfile extProfile = new ExtendedProfile();
+//		extProfile.setAppId(appId);
+//		extProfile.setProfileId(profileId);
+//		extProfile.setUserId("" + user.getId());
+//		extProfile.setContent(content);
+//		extProfile.setUser("" + user.getId());
+//		extProfile.setUpdateTime(System.currentTimeMillis());
+//
+//		try {
+//			profileManager.create(user, extProfile);
+//		} catch (AlreadyExistException e) {
+//			logger.error(
+//					String.format(
+//							"Extended profile already exists userId:%s, appId:%s, profileId:%s",
+//							"" + user.getId(), appId, profileId), e);
+//			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//			return;
+//		} catch (SmartCampusException e) {
+//			logger.error(
+//					"General exception creating extended profile for user "
+//							+ user.getId(), e);
+//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//		}
+//
+//	}
 
 	/**
 	 * Returns extended profile of a user given application and profileId,
@@ -188,6 +189,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws CommunityManagerException
 	 */
+	// TODO client flow
 	@RequestMapping(method = RequestMethod.GET, value = "/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/{userId}/{appId}/{profileId}")
 	public @ResponseBody
 	ExtendedProfile getExtendedProfile(HttpServletRequest request,
@@ -223,42 +225,42 @@ public class ExtendedProfileController extends SCController {
 		}
 	}
 
-	/**
-	 * Returns extended profile of an authenticate user given application and
-	 * profileId
-	 * 
-	 * @param request
-	 * @param response
-	 * @param session
-	 * @param appId
-	 * @param profileId
-	 * @return
-	 * @throws IOException
-	 * @throws CommunityManagerException
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me/{appId}/{profileId}")
-	public @ResponseBody
-	ExtendedProfile getMyExtendedProfile(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,
-			@PathVariable("appId") String appId,
-			@PathVariable("profileId") String profileId) throws IOException,
-			CommunityManagerException {
-		try {
-			User user = retrieveUser(request);
-			// User should not be null
-			if (user == null) {
-				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-				return null;
-			}
-
-			return storage.findExtendedProfile("" + user.getId(), appId,
-					profileId);
-
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			return null;
-		}
-	}
+//	/**
+//	 * Returns extended profile of an authenticate user given application and
+//	 * profileId
+//	 * 
+//	 * @param request
+//	 * @param response
+//	 * @param session
+//	 * @param appId
+//	 * @param profileId
+//	 * @return
+//	 * @throws IOException
+//	 * @throws CommunityManagerException
+//	 */
+//	@RequestMapping(method = RequestMethod.GET, value = "/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me/{appId}/{profileId}")
+//	public @ResponseBody
+//	ExtendedProfile getMyExtendedProfile(HttpServletRequest request,
+//			HttpServletResponse response, HttpSession session,
+//			@PathVariable("appId") String appId,
+//			@PathVariable("profileId") String profileId) throws IOException,
+//			CommunityManagerException {
+//		try {
+//			User user = retrieveUser(request);
+//			// User should not be null
+//			if (user == null) {
+//				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//				return null;
+//			}
+//
+//			return storage.findExtendedProfile("" + user.getId(), appId,
+//					profileId);
+//
+//		} catch (Exception e) {
+//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//			return null;
+//		}
+//	}
 
 	/**
 	 * Returns all profiles of a user for given application, filtered by user
@@ -273,6 +275,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws CommunityManagerException
 	 */
+	// TODO client flow
 	@RequestMapping(method = RequestMethod.GET, value = "/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/{userId}/{appId}")
 	public @ResponseBody
 	ExtendedProfiles getExtendedProfiles(HttpServletRequest request,
@@ -323,6 +326,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws CommunityManagerException
 	 */
+	// TODO client flow
 	@RequestMapping(method = RequestMethod.POST, value = "/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/{appId}/{profileId}")
 	public @ResponseBody
 	ExtendedProfiles getUsersExtendedProfilesByAttributes(
@@ -377,6 +381,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws CommunityManagerException
 	 */
+	// TODO client flow
 	@RequestMapping(method = RequestMethod.GET, value = "/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/{appId}")
 	public @ResponseBody
 	ExtendedProfiles getUsersExtendedProfiles(HttpServletRequest request,
@@ -416,44 +421,44 @@ public class ExtendedProfileController extends SCController {
 		}
 	}
 
-	/**
-	 * Returns the list of extended profiles of authenticated user for a given
-	 * application
-	 * 
-	 * @param request
-	 * @param response
-	 * @param session
-	 * @param appId
-	 * @return
-	 * @throws IOException
-	 * @throws CommunityManagerException
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me/{appId}")
-	public @ResponseBody
-	ExtendedProfiles getMyExtendedProfiles(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,
-			@PathVariable("appId") String appId) throws IOException,
-			CommunityManagerException {
-		try {
-			User user = retrieveUser(request);
-			// User should not be null
-			if (user == null) {
-				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-				return null;
-			}
-
-			List<ExtendedProfile> profiles = storage.findExtendedProfiles(""
-					+ user.getId(), appId);
-			ExtendedProfiles ext = new ExtendedProfiles();
-			ext.setProfiles(profiles);
-
-			return ext;
-
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			return null;
-		}
-	}
+//	/**
+//	 * Returns the list of extended profiles of authenticated user for a given
+//	 * application
+//	 * 
+//	 * @param request
+//	 * @param response
+//	 * @param session
+//	 * @param appId
+//	 * @return
+//	 * @throws IOException
+//	 * @throws CommunityManagerException
+//	 */
+//	@RequestMapping(method = RequestMethod.GET, value = "/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me/{appId}")
+//	public @ResponseBody
+//	ExtendedProfiles getMyExtendedProfiles(HttpServletRequest request,
+//			HttpServletResponse response, HttpSession session,
+//			@PathVariable("appId") String appId) throws IOException,
+//			CommunityManagerException {
+//		try {
+//			User user = retrieveUser(request);
+//			// User should not be null
+//			if (user == null) {
+//				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//				return null;
+//			}
+//
+//			List<ExtendedProfile> profiles = storage.findExtendedProfiles(""
+//					+ user.getId(), appId);
+//			ExtendedProfiles ext = new ExtendedProfiles();
+//			ext.setProfiles(profiles);
+//
+//			return ext;
+//
+//		} catch (Exception e) {
+//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//			return null;
+//		}
+//	}
 
 	/**
 	 * Updates a extended profile of a user given application and profileId
@@ -469,6 +474,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws CommunityManagerException
 	 */
+	// TODO client flow
 	@RequestMapping(method = RequestMethod.PUT, value = "/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/{userId}/{appId}/{profileId}")
 	public void updateExtendedProfile(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -510,51 +516,51 @@ public class ExtendedProfileController extends SCController {
 		}
 	}
 
-	/**
-	 * Updates an extended profile of authenticated user given application and
-	 * profileId
-	 * 
-	 * @param request
-	 * @param response
-	 * @param session
-	 * @param appId
-	 * @param profileId
-	 * @param content
-	 * @throws IOException
-	 * @throws CommunityManagerException
-	 */
-	@RequestMapping(method = RequestMethod.PUT, value = "/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me/{appId}/{profileId}")
-	public void updateMyExtendedProfile(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,
-			@PathVariable("appId") String appId,
-			@PathVariable("profileId") String profileId,
-			@RequestBody Map<String, Object> content) throws IOException,
-			CommunityManagerException {
-		try {
-			User user = retrieveUser(request);
-			// User should not be null
-			if (user == null) {
-				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-				return;
-			}
-
-			ExtendedProfile profile = storage.findExtendedProfile(
-					"" + user.getId(), appId, profileId);
-
-			if (profile == null) {
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				return;
-			}
-
-			profile.setUpdateTime(System.currentTimeMillis());
-			profile.setContent(content);
-			profile.setUpdateTime(System.currentTimeMillis());
-			storage.updateObject(profile);
-
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-	}
+//	/**
+//	 * Updates an extended profile of authenticated user given application and
+//	 * profileId
+//	 * 
+//	 * @param request
+//	 * @param response
+//	 * @param session
+//	 * @param appId
+//	 * @param profileId
+//	 * @param content
+//	 * @throws IOException
+//	 * @throws CommunityManagerException
+//	 */
+//	@RequestMapping(method = RequestMethod.PUT, value = "/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me/{appId}/{profileId}")
+//	public void updateMyExtendedProfile(HttpServletRequest request,
+//			HttpServletResponse response, HttpSession session,
+//			@PathVariable("appId") String appId,
+//			@PathVariable("profileId") String profileId,
+//			@RequestBody Map<String, Object> content) throws IOException,
+//			CommunityManagerException {
+//		try {
+//			User user = retrieveUser(request);
+//			// User should not be null
+//			if (user == null) {
+//				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//				return;
+//			}
+//
+//			ExtendedProfile profile = storage.findExtendedProfile(
+//					"" + user.getId(), appId, profileId);
+//
+//			if (profile == null) {
+//				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//				return;
+//			}
+//
+//			profile.setUpdateTime(System.currentTimeMillis());
+//			profile.setContent(content);
+//			profile.setUpdateTime(System.currentTimeMillis());
+//			storage.updateObject(profile);
+//
+//		} catch (Exception e) {
+//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//		}
+//	}
 
 	/**
 	 * Deletes an extended profile of a user given application and profileId
@@ -569,6 +575,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws CommunityManagerException
 	 */
+	// TODO client flow
 	@RequestMapping(method = RequestMethod.DELETE, value = "/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/{userId}/{appId}/{profileId}")
 	public void deleteExtendedProfile(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -597,37 +604,37 @@ public class ExtendedProfileController extends SCController {
 		}
 	}
 
-	/**
-	 * Deletes an extended profile of an authenticated user given application
-	 * and profileId
-	 * 
-	 * @param request
-	 * @param response
-	 * @param session
-	 * @param appId
-	 * @param profileId
-	 * @throws IOException
-	 * @throws CommunityManagerException
-	 */
-	@RequestMapping(method = RequestMethod.DELETE, value = "/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me/{appId}/{profileId}")
-	public void deleteMyExtendedProfile(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,
-			@PathVariable("appId") String appId,
-			@PathVariable("profileId") String profileId) throws IOException,
-			CommunityManagerException {
-		try {
-			User user = retrieveUser(request);
-			// User should not be null
-			if (user == null) {
-				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-				return;
-			}
-
-			storage.deleteExtendedProfile("" + user.getId(), appId, profileId);
-
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-	}
+//	/**
+//	 * Deletes an extended profile of an authenticated user given application
+//	 * and profileId
+//	 * 
+//	 * @param request
+//	 * @param response
+//	 * @param session
+//	 * @param appId
+//	 * @param profileId
+//	 * @throws IOException
+//	 * @throws CommunityManagerException
+//	 */
+//	@RequestMapping(method = RequestMethod.DELETE, value = "/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me/{appId}/{profileId}")
+//	public void deleteMyExtendedProfile(HttpServletRequest request,
+//			HttpServletResponse response, HttpSession session,
+//			@PathVariable("appId") String appId,
+//			@PathVariable("profileId") String profileId) throws IOException,
+//			CommunityManagerException {
+//		try {
+//			User user = retrieveUser(request);
+//			// User should not be null
+//			if (user == null) {
+//				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//				return;
+//			}
+//
+//			storage.deleteExtendedProfile("" + user.getId(), appId, profileId);
+//
+//		} catch (Exception e) {
+//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//		}
+//	}
 
 }

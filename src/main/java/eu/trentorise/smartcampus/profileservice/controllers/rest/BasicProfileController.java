@@ -46,6 +46,7 @@ public class BasicProfileController extends SCController {
 	@Autowired
 	private ProfileManager profileManager;
 
+	// TODO client flow
 	@RequestMapping(method = RequestMethod.GET, value = "/eu.trentorise.smartcampus.profileservice.model.BasicProfile/{userId}")
 	public @ResponseBody
 	BasicProfile getUser(HttpServletRequest request,
@@ -67,6 +68,7 @@ public class BasicProfileController extends SCController {
 
 	}
 
+	// TODO client flow
 	@RequestMapping(method = RequestMethod.GET, value = "/eu.trentorise.smartcampus.profileservice.model.BasicProfile")
 	public @ResponseBody
 	BasicProfiles searchUsers(
@@ -120,6 +122,7 @@ public class BasicProfileController extends SCController {
 		}
 	}
 
+	// TODO client flow
 	@RequestMapping(method = RequestMethod.GET, value = "/profiles")
 	public @ResponseBody
 	List<BasicProfile> findProfiles(HttpServletRequest request,
