@@ -11,84 +11,44 @@
 	name="profile service" id="smartcampus.profile">
 
 
+    <resource name="App" id="app">
+        <description>Symbolic name of the application owning the profiles
+        </description>
+        <resource name="Profile" id="profile">
+            <description>Extended profile name</description>
+        </resource>
+    </resource>
 
-	<resourceMapping id="smartcampus.profile.basicprofile.me"
-		uri="smartcampus.profile.basicprofile.me"
-		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.BasicProfile/me"
-		authority="ROLE_USER">
+	<resourceMapping id="smartcampus.profile.basicprofile.me" uri="smartcampus.profile.basicprofile.me"
+		pathPatterns="/eu.trentorise.smartcampus.profileservice.model.BasicProfile/me"/>
+		
+	<resourceMapping id="smartcampus.profile.basicprofile.all" uri="smartcampus.profile.basicprofile.all"
+		pathPatterns="/eu.trentorise.smartcampus.profileservice.model.BasicProfile"/>
 
-	</resourceMapping>
-	<resourceMapping id="smartcampus.profile.basicprofile.all"
-		uri="smartcampus.profile.basicprofile.all" authority="ROLE_CLIENT"
-		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.BasicProfile">
+	<resourceMapping id="smartcampus.extprofile.own" uri="smartcampus.extprofile.write.{app}.{profile}"
+		pathPatterns="/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/users/{user}/{app}/{profile}"/>
 
-	</resourceMapping>
+	<resourceMapping id="smartcampus.extprofile.me.read" uri="smartcampus.extprofile.me.read"
+		pathPatterns="/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me"/>
+	<resourceMapping id="smartcampus.extprofile.me.app.read" uri="smartcampus.extprofile.me.{app}.read"
+		pathPatterns="/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me/{app}"/>
+	<resourceMapping id="smartcampus.extprofile.me.app.profile.read" uri="smartcampus.extprofile.me.{app}.{profile}.read"
+		pathPatterns="/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me/{app}/{profile}"/>
 
-
-	<resource name="App" id="app">
-		<description>Symbolic name of the application owning the profiles
-		</description>
-		<resource name="Profile" id="profile">
-			<description>Extended profile name</description>
-		</resource>
-	</resource>
-
-
-
-	<resourceMapping id="smartcampus.extprofile.own"
-		uri="smartcampus.extprofile.write.{app}.{profile}" authority="ROLE_CLIENT"
-		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/users/{app}/{profile}">
-
-	</resourceMapping>
-
-	<resourceMapping id="smartcampus.extprofile.me.read"
-		uri="smartcampus.extprofile.me.read" authority="ROLE_USER"
-		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me">
-
-	</resourceMapping>
-	<resourceMapping id="smartcampus.extprofile.me.app.read"
-		uri="smartcampus.extprofile.me.{app}.read" authority="ROLE_CLIENT"
-		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me/{app}">
-
-	</resourceMapping>
-	<resourceMapping id="smartcampus.extprofile.me.app.profile.read"
-		uri="smartcampus.extprofile.me.{app}.{profile}.read" authority="ROLE_USER"
-		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/me/{app}/{profile}">
-
-	</resourceMapping>
+	<resourceMapping id="smartcampus.extprofile.shared.read" uri="smartcampus.extprofile.shared.read"
+		pathPatterns="/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/shared"/>
+	<resourceMapping id="smartcampus.extprofile.shared.app.read" uri="smartcampus.extprofile.shared.{app}.read" 
+		pathPatterns="/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/shared/{app}"/>
+	<resourceMapping id="smartcampus.extprofile.shared.app.profile.read" uri="smartcampus.extprofile.shared.{app}.{profile}.read"
+		pathPatterns="/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/shared/{app}/{profile}"/>
 
 
-
-	<resourceMapping id="smartcampus.extprofile.shared.read"
-		uri="smartcampus.extprofile.shared.read" authority="ROLE_USER"
-		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/shared">
-
-	</resourceMapping>
-	<resourceMapping id="smartcampus.extprofile.shared.app.read"
-		uri="smartcampus.extprofile.shared.{app}.read" authority="ROLE_USER"
-		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/shared/{app}">
-
-	</resourceMapping>
-	<resourceMapping id="smartcampus.extprofile.shared.app.profile.read"
-		uri="smartcampus.extprofile.shared.{app}.{profile}.read" authority="ROLE_USER"
-		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/shared/{app}/{profile}">
-	</resourceMapping>
-
-
-	<resourceMapping id="smartcampus.extprofile.all.read"
-		uri="smartcampus.extprofile.all.read" authority="ROLE_CLIENT"
-		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile">
-	</resourceMapping>
-	<resourceMapping id="smartcampus.extprofile.all.app.read"
-		uri="smartcampus.extprofile.all.{app}.read" authority="ROLE_ROLE_CLIENT"
-		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/{app}">
-
-	</resourceMapping>
-	<resourceMapping id="smartcampus.extprofile.all.app.profile.read"
-		uri="smartcampus.extprofile.all.{app}.{profile}.read" authority="ROLE_USER"
-		pathPatterns="/smartcampus.profile/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/{app}/{profile}">
-
-	</resourceMapping>
+	<resourceMapping id="smartcampus.extprofile.all.read" uri="smartcampus.extprofile.all.read" 
+		pathPatterns="/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile"/>
+	<resourceMapping id="smartcampus.extprofile.all.app.read" uri="smartcampus.extprofile.all.{app}.read" 
+		pathPatterns="/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/{app}"/>
+	<resourceMapping id="smartcampus.extprofile.all.app.profile.read" uri="smartcampus.extprofile.all.{app}.{profile}.read"
+		pathPatterns="/eu.trentorise.smartcampus.profileservice.model.ExtendedProfile/{app}/{profile}"/>
 
 </service>
 

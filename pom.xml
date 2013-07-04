@@ -61,7 +61,7 @@
 
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
-			<artifactId>resource.provider</artifactId>
+			<artifactId>resource.api</artifactId>
 			<version>1.0</version>
 		</dependency>
 
