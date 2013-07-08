@@ -31,22 +31,6 @@ public class ProfileStorage extends BasicObjectSyncMongoStorage {
 	public ProfileStorage(MongoOperations mongoTemplate) {
 		super(mongoTemplate);
 	}
-
-	public List<StoreProfile> findByName(String fullname) {
-		Criteria criteria = new Criteria();
-		criteria = Criteria.where("content.fullname").regex(fullname, "i");
-		criteria.and("type").is(StoreProfile.class.getCanonicalName());
-		criteria.and("deleted").is(false);
-		return find(Query.query(criteria), StoreProfile.class);
-	}
-
-	public List<StoreProfile> findByUserIds(List<String> userIds) {
-		Criteria criteria = Criteria.where("content.userId");
-		criteria.in(userIds);
-		criteria.and("deleted").is(false);
-		return find(Query.query(criteria), StoreProfile.class);
-	}
-
 	public ExtendedProfile findExtendedProfile(String userId, String appId,
 			String profileId) {
 		Criteria criteria = new Criteria();
@@ -70,6 +54,17 @@ public class ProfileStorage extends BasicObjectSyncMongoStorage {
 		Criteria criteria = new Criteria();
 		criteria = Criteria.where("content.userId").is(userId)
 				.and("content.appId").is(appId);
+		criteria.and("type").is(ExtendedProfile.class.getCanonicalName());
+		criteria.and("deleted").is(false);
+
+		List<ExtendedProfile> profiles = find(Query.query(criteria),
+				ExtendedProfile.class);
+		return profiles;
+	}
+
+	public List<ExtendedProfile> findExtendedProfiles(String userId) {
+		Criteria criteria = new Criteria();
+		criteria = Criteria.where("content.userId").is(userId);
 		criteria.and("type").is(ExtendedProfile.class.getCanonicalName());
 		criteria.and("deleted").is(false);
 
