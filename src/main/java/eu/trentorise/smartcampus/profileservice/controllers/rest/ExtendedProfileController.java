@@ -157,9 +157,9 @@ public class ExtendedProfileController extends SCController {
 			@PathVariable("profileId") String profileId) throws IOException,
 			CommunityManagerException {
 		try {
-			Long userId = getUserId();
+			String userId = getUserId();
 
-			return storage.findExtendedProfile(""+userId, appId, profileId);
+			return storage.findExtendedProfile(userId, appId, profileId);
 
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -185,9 +185,9 @@ public class ExtendedProfileController extends SCController {
 			@PathVariable("appId") String appId) throws IOException,
 			CommunityManagerException {
 		try {
-			Long userId = getUserId();
+			String userId = getUserId();
 			ExtendedProfiles ext = new ExtendedProfiles();
-			ext.setProfiles(storage.findExtendedProfiles(""+userId, appId));
+			ext.setProfiles(storage.findExtendedProfiles(userId, appId));
 			return ext;
 
 		} catch (Exception e) {
@@ -212,7 +212,7 @@ public class ExtendedProfileController extends SCController {
 			HttpServletResponse response, HttpSession session) throws IOException,
 			CommunityManagerException {
 		try {
-			Long userId = getUserId();
+			String userId = getUserId();
 			ExtendedProfiles ext = new ExtendedProfiles();
 			ext.setProfiles(storage.findExtendedProfiles(""+userId));
 			return ext;
