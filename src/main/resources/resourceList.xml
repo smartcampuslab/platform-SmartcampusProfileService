@@ -19,7 +19,9 @@
 	<resourceMapping uri="smartcampus.extprofile.me.{app}.read"
 		pathPattern="/extprofile/me/{app}"/>
 	<resourceMapping uri="smartcampus.extprofile.me.{app}.{profile}.read"
-		pathPattern="/extprofile/me/{app}/{profile}"/>
+		pathPattern="/extprofile/me/{app}/{profile}" method="GET"/>
+    <resourceMapping uri="smartcampus.extprofile.me.{app}.{profile}.write"
+        pathPattern="/extprofile/me/{app}/{profile}" method="POST,DELETE"/>
 
 <!-- 	<resourceMapping uri="smartcampus.extprofile.shared.read" -->
 <!-- 		pathPattern="/extprofile/shared"/> -->

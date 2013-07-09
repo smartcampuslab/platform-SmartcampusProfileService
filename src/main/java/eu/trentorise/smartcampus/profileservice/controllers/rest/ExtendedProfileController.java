@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.exceptions.AlreadyExistException;
 import eu.trentorise.smartcampus.exceptions.SmartCampusException;
-import eu.trentorise.smartcampus.profileservice.managers.CommunityManagerException;
+import eu.trentorise.smartcampus.profileservice.managers.ProfileServiceException;
 import eu.trentorise.smartcampus.profileservice.managers.PermissionManager;
 import eu.trentorise.smartcampus.profileservice.managers.ProfileManager;
 import eu.trentorise.smartcampus.profileservice.model.ExtendedProfile;
@@ -63,7 +63,7 @@ public class ExtendedProfileController extends SCController {
 	 * @param profileId
 	 * @param content
 	 * @throws IOException
-	 * @throws CommunityManagerException
+	 * @throws ProfileServiceException
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/extprofile/{userId}/{appId}/{profileId}")
 	public void createExtendedProfile(HttpServletResponse response,
@@ -71,7 +71,7 @@ public class ExtendedProfileController extends SCController {
 			@PathVariable("appId") String appId,
 			@PathVariable("profileId") String profileId,
 			@RequestBody Map<String, Object> content) throws IOException,
-			CommunityManagerException {
+			ProfileServiceException {
 
 		ExtendedProfile extProfile = new ExtendedProfile();
 		extProfile.setAppId(appId);
@@ -116,7 +116,7 @@ public class ExtendedProfileController extends SCController {
 	 * @param profileId
 	 * @return
 	 * @throws IOException
-	 * @throws CommunityManagerException
+	 * @throws ProfileServiceException
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/{userId}/{appId}/{profileId}")
 	public @ResponseBody
@@ -125,7 +125,7 @@ public class ExtendedProfileController extends SCController {
 			@PathVariable("userId") String userId,
 			@PathVariable("appId") String appId,
 			@PathVariable("profileId") String profileId) throws IOException,
-			CommunityManagerException {
+			ProfileServiceException {
 		try {
 			ExtendedProfile profile = storage.findExtendedProfile(userId, appId, profileId);
 			return profile;
@@ -147,7 +147,7 @@ public class ExtendedProfileController extends SCController {
 	 * @param profileId
 	 * @return
 	 * @throws IOException
-	 * @throws CommunityManagerException
+	 * @throws ProfileServiceException
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/me/{appId}/{profileId}")
 	public @ResponseBody
@@ -155,7 +155,7 @@ public class ExtendedProfileController extends SCController {
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("appId") String appId,
 			@PathVariable("profileId") String profileId) throws IOException,
-			CommunityManagerException {
+			ProfileServiceException {
 		try {
 			String userId = getUserId();
 
@@ -176,14 +176,14 @@ public class ExtendedProfileController extends SCController {
 	 * @param appId
 	 * @return
 	 * @throws IOException
-	 * @throws CommunityManagerException
+	 * @throws ProfileServiceException
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/me/{appId}")
 	public @ResponseBody
 	ExtendedProfiles getMyAppExtendedProfiles(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("appId") String appId) throws IOException,
-			CommunityManagerException {
+			ProfileServiceException {
 		try {
 			String userId = getUserId();
 			ExtendedProfiles ext = new ExtendedProfiles();
@@ -204,13 +204,13 @@ public class ExtendedProfileController extends SCController {
 	 * @param session
 	 * @return
 	 * @throws IOException
-	 * @throws CommunityManagerException
+	 * @throws ProfileServiceException
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/me")
 	public @ResponseBody
 	ExtendedProfiles getMyExtendedProfiles(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session) throws IOException,
-			CommunityManagerException {
+			ProfileServiceException {
 		try {
 			String userId = getUserId();
 			ExtendedProfiles ext = new ExtendedProfiles();
@@ -235,7 +235,7 @@ public class ExtendedProfileController extends SCController {
 	 * @param profileAttrs
 	 * @return
 	 * @throws IOException
-	 * @throws CommunityManagerException
+	 * @throws ProfileServiceException
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/extprofile/all/{appId}/{profileId}")
 	public @ResponseBody
@@ -243,7 +243,7 @@ public class ExtendedProfileController extends SCController {
 			HttpServletRequest request, HttpServletResponse response,
 			@PathVariable String profileId, @PathVariable String appId,
 			@RequestBody Map<String, Object> profileAttrs) throws IOException,
-			CommunityManagerException {
+			ProfileServiceException {
 
 		try {
 			List<ExtendedProfile> profiles = storage.findExtendedProfiles(appId, profileId, profileAttrs);
@@ -268,14 +268,14 @@ public class ExtendedProfileController extends SCController {
 	 * @param userIds
 	 * @return
 	 * @throws IOException
-	 * @throws CommunityManagerException
+	 * @throws ProfileServiceException
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/all")
 	public @ResponseBody
 	ExtendedProfiles getUsersExtendedProfiles(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@RequestParam List<String> userIds) throws IOException,
-			CommunityManagerException {
+			ProfileServiceException {
 		return getAllProfiles(response, userIds, null, null);
 	}
 	/**
@@ -290,7 +290,7 @@ public class ExtendedProfileController extends SCController {
 	 * @param appId
 	 * @return
 	 * @throws IOException
-	 * @throws CommunityManagerException
+	 * @throws ProfileServiceException
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/all/{appId}")
 	public @ResponseBody
@@ -298,7 +298,7 @@ public class ExtendedProfileController extends SCController {
 			HttpServletResponse response, HttpSession session,
 			@RequestParam List<String> userIds,
 			@PathVariable("appId") String appId) throws IOException,
-			CommunityManagerException {
+			ProfileServiceException {
 		return getAllProfiles(response, userIds, appId, null);
 	}
 	/**
@@ -314,7 +314,7 @@ public class ExtendedProfileController extends SCController {
 	 * @param profileId
 	 * @return
 	 * @throws IOException
-	 * @throws CommunityManagerException
+	 * @throws ProfileServiceException
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/all/{appId}/{profileId}")
 	public @ResponseBody
@@ -322,7 +322,7 @@ public class ExtendedProfileController extends SCController {
 			HttpServletResponse response, HttpSession session,
 			@RequestParam List<String> userIds,
 			@PathVariable("appId") String appId, @PathVariable String profileId) throws IOException,
-			CommunityManagerException {
+			ProfileServiceException {
 		return getAllProfiles(response, userIds, appId, profileId);
 	}
 
@@ -351,7 +351,6 @@ public class ExtendedProfileController extends SCController {
 
 	/**
 	 * Updates a extended profile of a user given application and profileId
-	 * Valid only if userId is the authenticated user
 	 * 
 	 * @param request
 	 * @param response
@@ -361,7 +360,7 @@ public class ExtendedProfileController extends SCController {
 	 * @param profileId
 	 * @param content
 	 * @throws IOException
-	 * @throws CommunityManagerException
+	 * @throws ProfileServiceException
 	 */
 	@RequestMapping(method = RequestMethod.PUT, value = "/extprofile/{userId}/{appId}/{profileId}")
 	public void updateExtendedProfile(HttpServletRequest request,
@@ -370,7 +369,7 @@ public class ExtendedProfileController extends SCController {
 			@PathVariable("appId") String appId,
 			@PathVariable("profileId") String profileId,
 			@RequestBody Map<String, Object> content) throws IOException,
-			CommunityManagerException {
+			ProfileServiceException {
 		try {
 			ExtendedProfile profile = storage.findExtendedProfile(userId,
 					appId, profileId);
@@ -380,7 +379,6 @@ public class ExtendedProfileController extends SCController {
 				return;
 			}
 
-			profile.setUpdateTime(System.currentTimeMillis());
 			profile.setContent(content);
 			profile.setUpdateTime(System.currentTimeMillis());
 			storage.updateObject(profile);
@@ -391,8 +389,52 @@ public class ExtendedProfileController extends SCController {
 	}
 
 	/**
-	 * Deletes an extended profile of a user given application and profileId
+	 * Updates or creates an extended profile of the current useruser given application and profileId
 	 * Valid only if userId is the authenticated user
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param appId
+	 * @param profileId
+	 * @param content
+	 * @throws IOException
+	 * @throws ProfileServiceException
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/extprofile/me/{appId}/{profileId}")
+	public void updateMyExtendedProfile(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("appId") String appId,
+			@PathVariable("profileId") String profileId,
+			@RequestBody Map<String, Object> content) throws IOException,
+			ProfileServiceException {
+		try {
+			String userId = getUserId();
+			ExtendedProfile profile = storage.findExtendedProfile(userId, appId, profileId);
+
+			if (profile == null) {
+				User user = getUserObject(userId);
+				ExtendedProfile extProfile = new ExtendedProfile();
+				extProfile.setAppId(appId);
+				extProfile.setProfileId(profileId);
+				extProfile.setUserId(userId);
+				extProfile.setContent(content);
+				extProfile.setUser(userId);
+				extProfile.setUpdateTime(System.currentTimeMillis());
+				profileManager.create(user, extProfile);
+			} else {
+				profile.setContent(content);
+				profile.setUpdateTime(System.currentTimeMillis());
+				storage.updateObject(profile);
+			}
+
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * Deletes an extended profile of a user given application and profileId
 	 * 
 	 * @param request
 	 * @param response
@@ -401,7 +443,7 @@ public class ExtendedProfileController extends SCController {
 	 * @param appId
 	 * @param profileId
 	 * @throws IOException
-	 * @throws CommunityManagerException
+	 * @throws ProfileServiceException
 	 */
 	@RequestMapping(method = RequestMethod.DELETE, value = "/extprofile/{userId}/{appId}/{profileId}")
 	public void deleteExtendedProfile(HttpServletRequest request,
@@ -409,10 +451,34 @@ public class ExtendedProfileController extends SCController {
 			@PathVariable("userId") String userId,
 			@PathVariable("appId") String appId,
 			@PathVariable("profileId") String profileId) throws IOException,
-			CommunityManagerException {
+			ProfileServiceException {
 		try {
 			storage.deleteExtendedProfile(userId, appId, profileId);
 
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+	}
+	/**
+	 * Deletes an extended profile of a user given application and profileId
+	 * Valid only if userId is the authenticated user
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param appId
+	 * @param profileId
+	 * @throws IOException
+	 * @throws ProfileServiceException
+	 */
+	@RequestMapping(method = RequestMethod.DELETE, value = "/extprofile/me/{appId}/{profileId}")
+	public void deleteMyExtendedProfile(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("appId") String appId,
+			@PathVariable("profileId") String profileId) throws IOException,
+			ProfileServiceException {
+		try {
+			storage.deleteExtendedProfile(getUserId(), appId, profileId);
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}

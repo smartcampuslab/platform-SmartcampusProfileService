@@ -15,19 +15,19 @@
  ******************************************************************************/
 package eu.trentorise.smartcampus.profileservice.managers;
 
-public class CommunityManagerException extends Exception {
+public class ProfileServiceException extends Exception {
 
 	private static final long serialVersionUID = 7087578061325357266L;
 
-	public CommunityManagerException() {
+	public ProfileServiceException() {
 		super();
 	}
 
-	public CommunityManagerException(String msg) {
+	public ProfileServiceException(String msg) {
 		super(msg);
 	}
 
-	public CommunityManagerException(Throwable e) {
+	public ProfileServiceException(Throwable e) {
 		super(e);
 	}
 
