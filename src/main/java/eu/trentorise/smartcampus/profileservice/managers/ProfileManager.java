@@ -61,7 +61,7 @@ public class ProfileManager extends SocialEngineConnector {
 	 * @throws SmartCampusException
 	 */
 	public ExtendedProfile create(User user, ExtendedProfile extProfile)
-			throws CommunityManagerException, AlreadyExistException,
+			throws ProfileServiceException, AlreadyExistException,
 			SmartCampusException {
 		// check if user and extProfile informations are consistent
 		if (extProfile.getUserId() == null
