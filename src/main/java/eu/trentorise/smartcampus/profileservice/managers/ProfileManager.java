@@ -17,6 +17,15 @@ package eu.trentorise.smartcampus.profileservice.managers;
 
 import it.unitn.disi.sweb.webapi.client.WebApiException;
 import it.unitn.disi.sweb.webapi.model.entity.Entity;
+import it.unitn.disi.sweb.webapi.model.entity.EntityBase;
+import it.unitn.disi.sweb.webapi.model.smartcampus.livetopics.LiveTopic;
+import it.unitn.disi.sweb.webapi.model.smartcampus.livetopics.LiveTopicContentType;
+import it.unitn.disi.sweb.webapi.model.smartcampus.livetopics.LiveTopicSource;
+import it.unitn.disi.sweb.webapi.model.smartcampus.livetopics.LiveTopicStatus;
+import it.unitn.disi.sweb.webapi.model.smartcampus.livetopics.LiveTopicSubject;
+
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +57,7 @@ public class ProfileManager extends SocialEngineConnector {
 	@Autowired
 	private ProfileStorage storage;
 
+	private Long profileType;
 	/**
 	 * persists a custom profile for the given user
 	 * 
@@ -63,13 +73,7 @@ public class ProfileManager extends SocialEngineConnector {
 	public ExtendedProfile create(User user, ExtendedProfile extProfile)
 			throws ProfileServiceException, AlreadyExistException,
 			SmartCampusException {
-		// check if user and extProfile informations are consistent
-		if (extProfile.getUserId() == null
-				|| !user.getId().toString().equals(extProfile.getUserId())) {
-			String msg = "Extended profile and user "+user.getId()+" mismatch";
-			logger.error(msg);
-			throw new SmartCampusException(msg);
-		}
+
 		ExtendedProfile present = storage.findExtendedProfile(
 				extProfile.getUserId(), extProfile.getAppId(),
 				extProfile.getProfileId());
@@ -123,7 +127,7 @@ public class ProfileManager extends SocialEngineConnector {
 			return deleteExtendedProfile(storage.getObjectById(extProfileId,
 					ExtendedProfile.class));
 		} catch (DataException e) {
-			String msg = String.format("Exception getting extended profile %s",
+			String msg = String.format("Exception deleting extended profile %s",
 					extProfileId);
 			logger.error(msg, e);
 			throw new SmartCampusException(msg);
@@ -143,13 +147,14 @@ public class ProfileManager extends SocialEngineConnector {
 				if (!SemanticHelper.deleteEntity(socialEngineClient,
 						extProfile.getSocialId())) {
 					logger.warn(String
-							.format("Error deleting entity %s binded to extended profile %s",
+							.format("Error deleting entity %s bonded to extended profile %s",
 									extProfile.getSocialId(),
 									extProfile.getId()));
 				}
 			} catch (WebApiException e) {
+				e.printStackTrace();
 				logger.warn(String
-						.format("Error deleting entity %s binded to extended profile %s",
+						.format("Error deleting entity %s bond to extended profile %s",
 								extProfile.getSocialId(), extProfile.getId()));
 			}
 
@@ -163,6 +168,58 @@ public class ProfileManager extends SocialEngineConnector {
 			logger.error(msg, e);
 			throw new SmartCampusException(msg);
 		}
+	}
+
+	/**
+	 * @param ownerId
+	 * @return list of profile entityIds shared with the specified user
+	 */
+	public List<Long> getShared(Long ownerId) {
+		try {
+			LiveTopic filter = new LiveTopic();
+			LiveTopicSource filterSource = new LiveTopicSource();
+			if (ownerId > 0) {
+				filter.setActorId(ownerId); // <-- mandatory
+			}
+			filterSource.setAllKnownCommunities(true);
+			filterSource.setAllKnownUsers(true);
+			filterSource.setAllCommunities(true);
+			filterSource.setAllUsers(true);
+			
+			filter.setSource(filterSource);
+			LiveTopicSubject subject = new LiveTopicSubject();
+			subject.setAllSubjects(true); // <-- important
+			filter.setSubjects(Collections.singleton(subject));
+
+			LiveTopicContentType type = new LiveTopicContentType();
+			type.setEntityTypeIds(Collections.singleton(getProfileType(ownerId)));
+			filter.setType(type); // <-- mandatory
+			filter.setStatus(LiveTopicStatus.ACTIVE); // <-- mandatory
+			List<Long> sharedIds = socialEngineClient.computeEntitiesForLiveTopic(filter, null, null);
+			return sharedIds;
+		} catch (WebApiException e) {
+			logger.error("Exception getting user shared content", e);
+			return Collections.emptyList();
+		}
+	}
+
+	private Long getProfileType(Long actorId) throws WebApiException {
+		if (profileType == null) {
+			profileType = socialEngineClient.readEntityType("profile", getEntityBase(actorId).getKbLabel()).getId();
+		}
+		return profileType;
+	}
+	
+	private EntityBase getEntityBase(Long actorId) throws WebApiException {
+		it.unitn.disi.sweb.webapi.model.smartcampus.social.User actor = socialEngineClient.readUser(actorId);
+		if (actor == null) {
+			throw new WebApiException("Actor with id " + actorId + " is not found.");
+		}
+		Long ebid = actor.getEntityBaseId();
+		if (ebid == null) {
+			throw new WebApiException("Actor with id " + actorId + " has null entitybase reference");
+		}
+		return socialEngineClient.readEntityBase(ebid);
 	}
 
 }

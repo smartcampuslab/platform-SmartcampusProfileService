@@ -18,8 +18,8 @@ package eu.trentorise.smartcampus.profileservice.managers;
 import it.unitn.disi.sweb.webapi.client.WebApiException;
 import it.unitn.disi.sweb.webapi.model.smartcampus.social.User;
 
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
@@ -29,13 +29,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import eu.trentorise.smartcampus.ac.provider.model.Attribute;
+import eu.trentorise.smartcampus.common.SemanticHelper;
 import eu.trentorise.smartcampus.exceptions.AlreadyExistException;
 import eu.trentorise.smartcampus.exceptions.SmartCampusException;
 import eu.trentorise.smartcampus.presentation.common.exception.DataException;
 import eu.trentorise.smartcampus.presentation.common.exception.NotFoundException;
-import eu.trentorise.smartcampus.profileservice.managers.CommunityManagerException;
-import eu.trentorise.smartcampus.profileservice.managers.ProfileManager;
 import eu.trentorise.smartcampus.profileservice.model.ExtendedProfile;
 import eu.trentorise.smartcampus.profileservice.storage.ProfileStorage;
 import eu.trentorise.smartcampus.test.SocialEngineOperation;
@@ -43,7 +41,7 @@ import eu.trentorise.smartcampus.test.SocialEngineOperation;
 /**
  * Test Class
  * 
- * @author mirko periillo
+ * @author mirko perillo
  * 
  */
 
@@ -61,12 +59,11 @@ public class ProfileManagerTest {
 	SocialEngineOperation socialOperation;
 
 	@Test
-	public void crudExtendedProfile() throws CommunityManagerException,
-			AlreadyExistException, SmartCampusException, WebApiException,
-			NotFoundException {
+	public void crudExtendedProfile() throws AlreadyExistException, SmartCampusException, WebApiException,
+			NotFoundException, ProfileServiceException {
 		User socialUser = socialOperation.createUser();
 
-		eu.trentorise.smartcampus.ac.provider.model.User user = new eu.trentorise.smartcampus.ac.provider.model.User();
+		eu.trentorise.smartcampus.resourceprovider.model.User user = new eu.trentorise.smartcampus.resourceprovider.model.User();
 		user.setId(1l);
 		user.setSocialId(socialUser.getId());
 		ExtendedProfile p = new ExtendedProfile();
@@ -83,52 +80,10 @@ public class ProfileManagerTest {
 		Assert.assertTrue(profileManager.deleteExtendedProfile(p.getId()));
 	}
 
-	@Test
-	public void profileByUserIds() throws CommunityManagerException {
-		eu.trentorise.smartcampus.ac.provider.model.User u = new eu.trentorise.smartcampus.ac.provider.model.User();
-		u.setId(10l);
-		Attribute name = new Attribute();
-		name.setKey("eu.trentorise.smartcampus.givenname");
-		name.setValue("user1");
-		Attribute surname = new Attribute();
-		surname.setKey("eu.trentorise.smartcampus.surname");
-		surname.setValue("surname");
-
-		u.setAttributes(Arrays.asList(name, surname));
-		profileManager.getOrCreateProfile(u);
-
-		u = new eu.trentorise.smartcampus.ac.provider.model.User();
-		u.setId(15l);
-		name = new Attribute();
-		name.setKey("eu.trentorise.smartcampus.givenname");
-		name.setValue("user2");
-		surname = new Attribute();
-		surname.setKey("eu.trentorise.smartcampus.surname");
-		surname.setValue("surname");
-
-		u.setAttributes(Arrays.asList(name, surname));
-		profileManager.getOrCreateProfile(u);
-
-		u = new eu.trentorise.smartcampus.ac.provider.model.User();
-		u.setId(101010l);
-		name = new Attribute();
-		name.setKey("eu.trentorise.smartcampus.givenname");
-		name.setValue("user3");
-		surname = new Attribute();
-		surname.setKey("eu.trentorise.smartcampus.surname");
-		surname.setValue("surname");
-
-		u.setAttributes(Arrays.asList(name, surname));
-		profileManager.getOrCreateProfile(u);
-
-		profileManager.getUsers();
-		profileManager.getUsers(Arrays.asList("110", "1101010", "200"));
-	}
 
 	@Test
-	public void extProfileByAttrs() throws CommunityManagerException,
-			AlreadyExistException, SmartCampusException, WebApiException,
-			DataException {
+	public void extProfileByAttrs() throws AlreadyExistException, SmartCampusException, WebApiException,
+			DataException, ProfileServiceException {
 
 		// cleaning
 		for (ExtendedProfile extP : storage.findExtendedProfiles("10", "appId")) {
@@ -141,16 +96,9 @@ public class ProfileManagerTest {
 		User socialUser = socialOperation.createUser();
 
 		// user1
-		eu.trentorise.smartcampus.ac.provider.model.User u = new eu.trentorise.smartcampus.ac.provider.model.User();
+		eu.trentorise.smartcampus.resourceprovider.model.User u = new eu.trentorise.smartcampus.resourceprovider.model.User();
 		u.setId(10l);
 		u.setSocialId(socialUser.getId());
-		Attribute name = new Attribute();
-		name.setKey("eu.trentorise.smartcampus.givenname");
-		name.setValue("user1");
-		Attribute surname = new Attribute();
-		surname.setKey("eu.trentorise.smartcampus.surname");
-		surname.setValue("surname");
-		u.setAttributes(Arrays.asList(name, surname));
 
 		// profile user 1
 		ExtendedProfile profile = new ExtendedProfile();
@@ -163,17 +111,9 @@ public class ProfileManagerTest {
 		profileManager.create(u, profile);
 
 		// user2
-		u = new eu.trentorise.smartcampus.ac.provider.model.User();
+		u = new eu.trentorise.smartcampus.resourceprovider.model.User();
 		u.setId(15l);
 		u.setSocialId(socialUser.getId());
-		name = new Attribute();
-		name.setKey("eu.trentorise.smartcampus.givenname");
-		name.setValue("user2");
-
-		surname = new Attribute();
-		surname.setKey("eu.trentorise.smartcampus.surname");
-		surname.setValue("surname");
-		u.setAttributes(Arrays.asList(name, surname));
 
 		// profile user2
 		profile = new ExtendedProfile();
@@ -187,9 +127,58 @@ public class ProfileManagerTest {
 
 		Map<String, Object> filter = new HashMap<String, Object>();
 		filter.put("pref1", "value");
-		storage.findExtendedProfiles("appId", "preferences", filter);
+		List<ExtendedProfile> list = storage.findExtendedProfiles("appId", "preferences", filter);
+		Assert.assertEquals(list.size(), 2);
 
 		socialOperation.deleteUser(socialUser.getId());
 
 	}
+	
+	@Test
+	public void extProfileShare() throws AlreadyExistException, SmartCampusException, WebApiException,
+			DataException, ProfileServiceException {
+
+		User socialUser1 = socialOperation.createUser();
+		User socialUser2 = socialOperation.createUser();
+
+		try {
+			// cleaning
+			for (ExtendedProfile extP : storage.findExtendedProfiles("10", "appId")) {
+				storage.deleteExtendedProfile(extP.getId());
+			}
+
+			// user1
+			eu.trentorise.smartcampus.resourceprovider.model.User u = new eu.trentorise.smartcampus.resourceprovider.model.User();
+			u.setId(10l);
+			u.setSocialId(socialUser1.getId());
+
+			// profile user 1
+			ExtendedProfile profile = new ExtendedProfile();
+			profile.setAppId("appId");
+			profile.setUserId("10");
+			profile.setProfileId("preferences");
+			Map<String, Object> m = new HashMap<String, Object>();
+			m.put("pref1", "value");
+			profile.setContent(m);
+			ExtendedProfile ep = profileManager.create(u, profile);
+
+			// user2
+			u = new eu.trentorise.smartcampus.resourceprovider.model.User();
+			u.setId(15l);
+			u.setSocialId(socialUser2.getId());
+
+			socialOperation.shareEntityWith(ep.getSocialId(), socialUser1.getId(), socialUser2.getId());
+
+			List<Long> list = profileManager.getShared(socialUser2.getId());
+			Assert.assertEquals(list.size(), 1);
+
+		} finally {
+			socialOperation.deleteUser(socialUser1.getId());
+			socialOperation.deleteUser(socialUser2.getId());
+		}
+		
+
+
+	}
+
 }

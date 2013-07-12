@@ -12,7 +12,7 @@
     <resource id="profile"/>
     <resource id="app"/>
 
-	<resourceMapping uri="smartcampus.extprofile.write.{app}.{profile}" pathPattern="/extprofile/{userId}/{app}/{profile}"/>
+	<resourceMapping uri="smartcampus.extprofile.write.{app}.{profile}" pathPattern="/extprofile/app/{userId}/{app}/{profile}"/>
 
 	<resourceMapping uri="smartcampus.extprofile.me.read"
 		pathPattern="/extprofile/me"/>

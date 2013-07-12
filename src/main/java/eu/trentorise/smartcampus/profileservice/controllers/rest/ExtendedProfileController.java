@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2012-2013 Trento RISE
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ ******************************************************************************/
 package eu.trentorise.smartcampus.profileservice.controllers.rest;
 
 import java.io.IOException;
@@ -31,6 +46,11 @@ import eu.trentorise.smartcampus.resourceprovider.controller.SCController;
 import eu.trentorise.smartcampus.resourceprovider.model.AuthServices;
 import eu.trentorise.smartcampus.resourceprovider.model.User;
 
+/**
+ * Access to the extended profiles data
+ * @author raman
+ *
+ */
 @Controller("extendedProfileController")
 public class ExtendedProfileController extends SCController {
 
@@ -483,5 +503,49 @@ public class ExtendedProfileController extends SCController {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	/**
+	 * @param appId
+	 * @param profileId
+	 * @return all profiles of specific profile type shared with the current user
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/shared/{appId}/{profileId}")
+	public @ResponseBody ExtendedProfiles getProfileSharedExtendedProfile(@PathVariable("appId") String appId,
+			@PathVariable("profileId") String profileId) 
+	{
+		return getSharedProfiles(getUserObject(getUserId()).getSocialId(), appId, profileId);
+	}
+	
+	/**
+	 * @param appId
+	 * @param profileId
+	 * @return all profiles of specific app shared with the current user
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/shared/{appId}")
+	public @ResponseBody ExtendedProfiles getAppSharedExtendedProfile(@PathVariable("appId") String appId) 
+	{
+		return getSharedProfiles(getUserObject(getUserId()).getSocialId(), appId, null);
+	}
 
+	/**
+	 * @param appId
+	 * @param profileId
+	 * @return all profiles shared with the current user
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/shared")
+	public @ResponseBody ExtendedProfiles getAllSharedExtendedProfile()  {
+		return getSharedProfiles(getUserObject(getUserId()).getSocialId(), null, null);
+	}
+
+	public ExtendedProfiles getSharedProfiles(Long actorId, String appId, String profileId) {
+		List<ExtendedProfile> res = new ArrayList<ExtendedProfile>();
+		List<Long> list = profileManager.getShared(actorId);
+		for (Long entityId : list) {
+			ExtendedProfile p = storage.getObjectByEntityId(entityId, appId, profileId);
+			if (p != null) res.add(p);
+		}
+		ExtendedProfiles eps = new ExtendedProfiles();
+		eps.setProfiles(res);
+		return eps;
+	}
 }

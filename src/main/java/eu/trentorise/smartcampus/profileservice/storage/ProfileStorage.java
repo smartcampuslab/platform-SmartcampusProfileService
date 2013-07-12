@@ -108,5 +108,19 @@ public class ProfileStorage extends BasicObjectSyncMongoStorage {
 			deleteObject(profiles.get(0));
 		}
 	}
+	/**
+	 * @param entityId
+	 */
+	public ExtendedProfile getObjectByEntityId(Long entityId, String appId, String profileId) {
+		Criteria criteria = new Criteria();
+		criteria = Criteria.where("content.socialId").is(entityId);
+		if (appId != null) criteria.and("content.appId").is(appId);
+		if (profileId != null) criteria.and("content.profileId").is(profileId);
+		criteria.and("type").is(ExtendedProfile.class.getCanonicalName());
+		criteria.and("deleted").is(false);
+
+		List<ExtendedProfile> profiles = find(Query.query(criteria), ExtendedProfile.class);
+		return profiles == null || profiles.isEmpty() ? null : profiles.get(0);
+	}
 
 }
