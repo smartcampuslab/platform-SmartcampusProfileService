@@ -23,12 +23,12 @@
     <resourceMapping uri="smartcampus.extprofile.me.{app}.{profile}.write"
         pathPattern="/extprofile/me/{app}/{profile}" method="POST,DELETE"/>
 
-<!-- 	<resourceMapping uri="smartcampus.extprofile.shared.read" -->
-<!-- 		pathPattern="/extprofile/shared"/> -->
-<!-- 	<resourceMapping uri="smartcampus.extprofile.shared.{app}.read"  -->
-<!-- 		pathPattern="/extprofile/shared/{app}"/> -->
-<!-- 	<resourceMapping uri="smartcampus.extprofile.shared.{app}.{profile}.read" -->
-<!-- 		pathPattern="/extprofile/shared/{app}/{profile}"/> -->
+	<resourceMapping uri="smartcampus.extprofile.shared.read"
+		pathPattern="/extprofile/shared"/>
+	<resourceMapping uri="smartcampus.extprofile.shared.{app}.read" 
+		pathPattern="/extprofile/shared/{app}"/>
+	<resourceMapping uri="smartcampus.extprofile.shared.{app}.{profile}.read"
+		pathPattern="/extprofile/shared/{app}/{profile}"/>
 
 	<resourceMapping uri="smartcampus.extprofile.all.read" 
 		pathPattern="/extprofile/all"/>
