@@ -67,7 +67,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>smartcampus.profile</finalName>
+		<finalName>profileservice</finalName>
 	</build>
 
 	<repositories>
