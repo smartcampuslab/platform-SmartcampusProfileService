@@ -85,7 +85,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws ProfileServiceException
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/extprofile/{userId}/{appId}/{profileId}")
+	@RequestMapping(method = RequestMethod.POST, value = "/extprofile/app/{userId}/{appId}/{profileId}")
 	public void createExtendedProfile(HttpServletResponse response,
 			@PathVariable("userId") String userId,
 			@PathVariable("appId") String appId,
@@ -139,7 +139,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws ProfileServiceException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/{userId}/{appId}/{profileId}")
+	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/app/{userId}/{appId}/{profileId}")
 	public @ResponseBody
 	ExtendedProfile getExtendedProfile(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -382,7 +382,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws ProfileServiceException
 	 */
-	@RequestMapping(method = RequestMethod.PUT, value = "/extprofile/{userId}/{appId}/{profileId}")
+	@RequestMapping(method = RequestMethod.PUT, value = "/extprofile/app/{userId}/{appId}/{profileId}")
 	public void updateExtendedProfile(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("userId") String userId,
@@ -501,7 +501,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws ProfileServiceException
 	 */
-	@RequestMapping(method = RequestMethod.DELETE, value = "/extprofile/{userId}/{appId}/{profileId}")
+	@RequestMapping(method = RequestMethod.DELETE, value = "/extprofile/app/{userId}/{appId}/{profileId}")
 	public void deleteExtendedProfile(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("userId") String userId,
