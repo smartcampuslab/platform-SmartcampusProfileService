@@ -93,6 +93,7 @@ public class ExtendedProfileController extends SCController {
 			@RequestBody Map<String, Object> content) throws IOException,
 			ProfileServiceException {
 
+		
 		ExtendedProfile extProfile = new ExtendedProfile();
 		extProfile.setAppId(appId);
 		extProfile.setProfileId(profileId);
@@ -245,8 +246,7 @@ public class ExtendedProfileController extends SCController {
 
 
 	/**
-	 * Returns all extended profile for given application and profileId,
-	 * filtered by user visibility permissions
+	 * Returns all extended profile for given application and profileId, given the profile attributes
 	 * 
 	 * @param request
 	 * @param response
@@ -409,7 +409,7 @@ public class ExtendedProfileController extends SCController {
 	}
 
 	/**
-	 * Updates or creates an extended profile of the current useruser given application and profileId
+	 * Updates or creates an extended profile of the current user given application and profileId
 	 * Valid only if userId is the authenticated user
 	 * 
 	 * @param request
@@ -422,6 +422,49 @@ public class ExtendedProfileController extends SCController {
 	 * @throws ProfileServiceException
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/extprofile/me/{appId}/{profileId}")
+	public void createMyExtendedProfile(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("appId") String appId,
+			@PathVariable("profileId") String profileId,
+			@RequestBody Map<String, Object> content) throws IOException,
+			ProfileServiceException {
+		try {
+			String userId = getUserId();
+			User user = getUserObject(userId);
+			ExtendedProfile extProfile = new ExtendedProfile();
+			extProfile.setAppId(appId);
+			extProfile.setProfileId(profileId);
+			extProfile.setUserId(userId);
+			extProfile.setContent(content);
+			extProfile.setUser(userId);
+			extProfile.setUpdateTime(System.currentTimeMillis());
+			profileManager.create(user, extProfile);
+		} catch (AlreadyExistException e) {
+			logger.error(
+					String.format(
+							"Extended profile already exists: appId:%s, profileId:%s",
+							appId, profileId), e);
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * Updates or creates an extended profile of the current user given application and profileId
+	 * Valid only if userId is the authenticated user
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param appId
+	 * @param profileId
+	 * @param content
+	 * @throws IOException
+	 * @throws ProfileServiceException
+	 */
+	@RequestMapping(method = RequestMethod.PUT, value = "/extprofile/me/{appId}/{profileId}")
 	public void updateMyExtendedProfile(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("appId") String appId,
@@ -433,15 +476,8 @@ public class ExtendedProfileController extends SCController {
 			ExtendedProfile profile = storage.findExtendedProfile(userId, appId, profileId);
 
 			if (profile == null) {
-				User user = getUserObject(userId);
-				ExtendedProfile extProfile = new ExtendedProfile();
-				extProfile.setAppId(appId);
-				extProfile.setProfileId(profileId);
-				extProfile.setUserId(userId);
-				extProfile.setContent(content);
-				extProfile.setUser(userId);
-				extProfile.setUpdateTime(System.currentTimeMillis());
-				profileManager.create(user, extProfile);
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				return;
 			} else {
 				profile.setContent(content);
 				profile.setUpdateTime(System.currentTimeMillis());
@@ -537,7 +573,7 @@ public class ExtendedProfileController extends SCController {
 		return getSharedProfiles(getUserObject(getUserId()).getSocialId(), null, null);
 	}
 
-	public ExtendedProfiles getSharedProfiles(Long actorId, String appId, String profileId) {
+	protected ExtendedProfiles getSharedProfiles(Long actorId, String appId, String profileId) {
 		List<ExtendedProfile> res = new ArrayList<ExtendedProfile>();
 		List<Long> list = profileManager.getShared(actorId);
 		for (Long entityId : list) {
