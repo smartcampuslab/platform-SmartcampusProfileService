@@ -63,7 +63,7 @@ public class ProfileManagerTest {
 		User socialUser = socialOperation.createUser();
 
 		eu.trentorise.smartcampus.resourceprovider.model.User user = new eu.trentorise.smartcampus.resourceprovider.model.User();
-		user.setId(1l);
+		user.setId("1");
 		user.setSocialId(socialUser.getId().toString());
 		ExtendedProfile p = new ExtendedProfile();
 		p.setAppId("appId");
@@ -96,7 +96,7 @@ public class ProfileManagerTest {
 
 		// user1
 		eu.trentorise.smartcampus.resourceprovider.model.User u = new eu.trentorise.smartcampus.resourceprovider.model.User();
-		u.setId(10l);
+		u.setId("10");
 		u.setSocialId(socialUser.getId().toString());
 
 		// profile user 1
@@ -111,7 +111,7 @@ public class ProfileManagerTest {
 
 		// user2
 		u = new eu.trentorise.smartcampus.resourceprovider.model.User();
-		u.setId(15l);
+		u.setId("15");
 		u.setSocialId(socialUser.getId().toString());
 
 		// profile user2
@@ -148,7 +148,7 @@ public class ProfileManagerTest {
 
 			// user1
 			eu.trentorise.smartcampus.resourceprovider.model.User u = new eu.trentorise.smartcampus.resourceprovider.model.User();
-			u.setId(10l);
+			u.setId("10");
 			u.setSocialId(socialUser1.getId().toString());
 
 			// profile user 1
@@ -163,7 +163,7 @@ public class ProfileManagerTest {
 
 			// user2
 			u = new eu.trentorise.smartcampus.resourceprovider.model.User();
-			u.setId(15l);
+			u.setId("15");
 			u.setSocialId(socialUser2.getId().toString());
 
 			socialOperation.shareEntityWith(Long.parseLong(ep.getSocialId()), socialUser1.getId(), socialUser2.getId());
