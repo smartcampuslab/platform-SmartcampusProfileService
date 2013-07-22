@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import eu.trentorise.smartcampus.common.SemanticHelper;
 import eu.trentorise.smartcampus.exceptions.AlreadyExistException;
 import eu.trentorise.smartcampus.exceptions.SmartCampusException;
 import eu.trentorise.smartcampus.presentation.common.exception.DataException;
@@ -65,7 +64,7 @@ public class ProfileManagerTest {
 
 		eu.trentorise.smartcampus.resourceprovider.model.User user = new eu.trentorise.smartcampus.resourceprovider.model.User();
 		user.setId(1l);
-		user.setSocialId(socialUser.getId());
+		user.setSocialId(socialUser.getId().toString());
 		ExtendedProfile p = new ExtendedProfile();
 		p.setAppId("appId");
 		p.setProfileId("profileId");
@@ -98,7 +97,7 @@ public class ProfileManagerTest {
 		// user1
 		eu.trentorise.smartcampus.resourceprovider.model.User u = new eu.trentorise.smartcampus.resourceprovider.model.User();
 		u.setId(10l);
-		u.setSocialId(socialUser.getId());
+		u.setSocialId(socialUser.getId().toString());
 
 		// profile user 1
 		ExtendedProfile profile = new ExtendedProfile();
@@ -113,7 +112,7 @@ public class ProfileManagerTest {
 		// user2
 		u = new eu.trentorise.smartcampus.resourceprovider.model.User();
 		u.setId(15l);
-		u.setSocialId(socialUser.getId());
+		u.setSocialId(socialUser.getId().toString());
 
 		// profile user2
 		profile = new ExtendedProfile();
@@ -150,7 +149,7 @@ public class ProfileManagerTest {
 			// user1
 			eu.trentorise.smartcampus.resourceprovider.model.User u = new eu.trentorise.smartcampus.resourceprovider.model.User();
 			u.setId(10l);
-			u.setSocialId(socialUser1.getId());
+			u.setSocialId(socialUser1.getId().toString());
 
 			// profile user 1
 			ExtendedProfile profile = new ExtendedProfile();
@@ -165,11 +164,11 @@ public class ProfileManagerTest {
 			// user2
 			u = new eu.trentorise.smartcampus.resourceprovider.model.User();
 			u.setId(15l);
-			u.setSocialId(socialUser2.getId());
+			u.setSocialId(socialUser2.getId().toString());
 
-			socialOperation.shareEntityWith(ep.getSocialId(), socialUser1.getId(), socialUser2.getId());
+			socialOperation.shareEntityWith(Long.parseLong(ep.getSocialId()), socialUser1.getId(), socialUser2.getId());
 
-			List<Long> list = profileManager.getShared(socialUser2.getId());
+			List<Long> list = profileManager.getShared(socialUser2.getId().toString());
 			Assert.assertEquals(list.size(), 1);
 
 		} finally {

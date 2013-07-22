@@ -37,7 +37,7 @@ public class PermissionManager extends SocialEngineConnector {
 	public boolean checkExtendedProfilePermission(User user,
 			ExtendedProfile profile) throws SmartCampusException {
 		try {
-			return SemanticHelper.isEntitySharedWithUser(socialEngineClient, user.getSocialId(), profile.getSocialId());
+			return SemanticHelper.isEntitySharedWithUser(socialEngineClient, Long.parseLong(user.getSocialId()), Long.parseLong(profile.getSocialId()));
 		} catch (Exception e) {
 			String msg = String.format(
 					"Error checking if user %s can access profile %s",

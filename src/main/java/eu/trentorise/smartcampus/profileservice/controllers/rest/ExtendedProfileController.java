@@ -573,7 +573,7 @@ public class ExtendedProfileController extends SCController {
 		return getSharedProfiles(getUserObject(getUserId()).getSocialId(), null, null);
 	}
 
-	protected ExtendedProfiles getSharedProfiles(Long actorId, String appId, String profileId) {
+	protected ExtendedProfiles getSharedProfiles(String actorId, String appId, String profileId) {
 		List<ExtendedProfile> res = new ArrayList<ExtendedProfile>();
 		List<Long> list = profileManager.getShared(actorId);
 		for (Long entityId : list) {

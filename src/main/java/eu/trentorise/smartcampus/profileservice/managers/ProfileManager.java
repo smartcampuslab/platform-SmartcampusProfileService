@@ -89,12 +89,12 @@ public class ProfileManager extends SocialEngineConnector {
 		try {
 			Entity entity = SemanticHelper.createEntity(
 					socialEngineClient,
-					user.getSocialId(),
+					Long.parseLong(user.getSocialId()),
 					"profile",
 					"profileId:" + extProfile.getProfileId(),
 					"appId:" + extProfile.getAppId() + ",userId:"
 							+ extProfile.getUserId(), null, null);
-			extProfile.setSocialId(entity.getId());
+			extProfile.setSocialId(entity.getId().toString());
 		} catch (WebApiException e1) {
 			logger.error("Exception creating profile entity", e1);
 			throw new SmartCampusException(
@@ -145,7 +145,7 @@ public class ProfileManager extends SocialEngineConnector {
 		try {
 			try {
 				if (!SemanticHelper.deleteEntity(socialEngineClient,
-						extProfile.getSocialId())) {
+						Long.parseLong(extProfile.getSocialId()))) {
 					logger.warn(String
 							.format("Error deleting entity %s bonded to extended profile %s",
 									extProfile.getSocialId(),
@@ -174,12 +174,13 @@ public class ProfileManager extends SocialEngineConnector {
 	 * @param ownerId
 	 * @return list of profile entityIds shared with the specified user
 	 */
-	public List<Long> getShared(Long ownerId) {
+	public List<Long> getShared(String ownerId) {
 		try {
 			LiveTopic filter = new LiveTopic();
 			LiveTopicSource filterSource = new LiveTopicSource();
-			if (ownerId > 0) {
-				filter.setActorId(ownerId); // <-- mandatory
+			Long actorId = Long.parseLong(ownerId);
+			if (actorId > 0) {
+				filter.setActorId(actorId); // <-- mandatory
 			}
 			filterSource.setAllKnownCommunities(true);
 			filterSource.setAllKnownUsers(true);
@@ -192,7 +193,7 @@ public class ProfileManager extends SocialEngineConnector {
 			filter.setSubjects(Collections.singleton(subject));
 
 			LiveTopicContentType type = new LiveTopicContentType();
-			type.setEntityTypeIds(Collections.singleton(getProfileType(ownerId)));
+			type.setEntityTypeIds(Collections.singleton(getProfileType(actorId)));
 			filter.setType(type); // <-- mandatory
 			filter.setStatus(LiveTopicStatus.ACTIVE); // <-- mandatory
 			List<Long> sharedIds = socialEngineClient.computeEntitiesForLiveTopic(filter, null, null);
