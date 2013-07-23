@@ -36,15 +36,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.exceptions.AlreadyExistException;
 import eu.trentorise.smartcampus.exceptions.SmartCampusException;
-import eu.trentorise.smartcampus.profileservice.managers.ProfileServiceException;
 import eu.trentorise.smartcampus.profileservice.managers.PermissionManager;
 import eu.trentorise.smartcampus.profileservice.managers.ProfileManager;
+import eu.trentorise.smartcampus.profileservice.managers.ProfileServiceException;
 import eu.trentorise.smartcampus.profileservice.model.ExtendedProfile;
 import eu.trentorise.smartcampus.profileservice.model.ExtendedProfiles;
 import eu.trentorise.smartcampus.profileservice.storage.ProfileStorage;
 import eu.trentorise.smartcampus.resourceprovider.controller.SCController;
 import eu.trentorise.smartcampus.resourceprovider.model.AuthServices;
-import eu.trentorise.smartcampus.resourceprovider.model.User;
+import eu.trentorise.smartcampus.social.model.User;
 
 /**
  * Access to the extended profiles data

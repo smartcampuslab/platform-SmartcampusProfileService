@@ -21,8 +21,8 @@ import org.springframework.stereotype.Component;
 import eu.trentorise.smartcampus.common.SemanticHelper;
 import eu.trentorise.smartcampus.exceptions.SmartCampusException;
 import eu.trentorise.smartcampus.profileservice.model.ExtendedProfile;
-import eu.trentorise.smartcampus.resourceprovider.model.User;
 import eu.trentorise.smartcampus.social.SocialEngineConnector;
+import eu.trentorise.smartcampus.social.model.User;
 
 /**
  * @author mirko perillo

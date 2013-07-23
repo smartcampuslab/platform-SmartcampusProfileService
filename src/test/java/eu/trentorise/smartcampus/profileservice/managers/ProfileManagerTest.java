@@ -62,7 +62,7 @@ public class ProfileManagerTest {
 			NotFoundException, ProfileServiceException {
 		User socialUser = socialOperation.createUser();
 
-		eu.trentorise.smartcampus.resourceprovider.model.User user = new eu.trentorise.smartcampus.resourceprovider.model.User();
+		eu.trentorise.smartcampus.social.model.User user = new eu.trentorise.smartcampus.social.model.User();
 		user.setId("1");
 		user.setSocialId(socialUser.getId().toString());
 		ExtendedProfile p = new ExtendedProfile();
@@ -95,7 +95,7 @@ public class ProfileManagerTest {
 		User socialUser = socialOperation.createUser();
 
 		// user1
-		eu.trentorise.smartcampus.resourceprovider.model.User u = new eu.trentorise.smartcampus.resourceprovider.model.User();
+		eu.trentorise.smartcampus.social.model.User u = new eu.trentorise.smartcampus.social.model.User();
 		u.setId("10");
 		u.setSocialId(socialUser.getId().toString());
 
@@ -110,7 +110,7 @@ public class ProfileManagerTest {
 		profileManager.create(u, profile);
 
 		// user2
-		u = new eu.trentorise.smartcampus.resourceprovider.model.User();
+		u = new eu.trentorise.smartcampus.social.model.User();
 		u.setId("15");
 		u.setSocialId(socialUser.getId().toString());
 
@@ -147,7 +147,7 @@ public class ProfileManagerTest {
 			}
 
 			// user1
-			eu.trentorise.smartcampus.resourceprovider.model.User u = new eu.trentorise.smartcampus.resourceprovider.model.User();
+			eu.trentorise.smartcampus.social.model.User u = new eu.trentorise.smartcampus.social.model.User();
 			u.setId("10");
 			u.setSocialId(socialUser1.getId().toString());
 
@@ -162,7 +162,7 @@ public class ProfileManagerTest {
 			ExtendedProfile ep = profileManager.create(u, profile);
 
 			// user2
-			u = new eu.trentorise.smartcampus.resourceprovider.model.User();
+			u = new eu.trentorise.smartcampus.social.model.User();
 			u.setId("15");
 			u.setSocialId(socialUser2.getId().toString());
 

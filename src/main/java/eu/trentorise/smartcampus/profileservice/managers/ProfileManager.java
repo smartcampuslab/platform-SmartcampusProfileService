@@ -38,8 +38,8 @@ import eu.trentorise.smartcampus.presentation.common.exception.DataException;
 import eu.trentorise.smartcampus.presentation.common.exception.NotFoundException;
 import eu.trentorise.smartcampus.profileservice.model.ExtendedProfile;
 import eu.trentorise.smartcampus.profileservice.storage.ProfileStorage;
-import eu.trentorise.smartcampus.resourceprovider.model.User;
 import eu.trentorise.smartcampus.social.SocialEngineConnector;
+import eu.trentorise.smartcampus.social.model.User;
 
 /**
  * <i>ProfileManager</i> manages the
