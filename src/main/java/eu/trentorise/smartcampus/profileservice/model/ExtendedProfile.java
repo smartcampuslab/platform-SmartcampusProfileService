@@ -38,7 +38,7 @@ public class ExtendedProfile extends BasicObject {
 	/**
 	 * profile social id
 	 */
-	private long socialId;
+	private String socialId;
 
 	public String getAppId() {
 		return appId;
@@ -72,11 +72,11 @@ public class ExtendedProfile extends BasicObject {
 		this.userId = userId;
 	}
 
-	public long getSocialId() {
+	public String getSocialId() {
 		return socialId;
 	}
 
-	public void setSocialId(long socialId) {
+	public void setSocialId(String socialId) {
 		this.socialId = socialId;
 	}
 

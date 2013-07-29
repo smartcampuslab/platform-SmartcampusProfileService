@@ -16,35 +16,29 @@
 package eu.trentorise.smartcampus.profileservice.managers;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import eu.trentorise.smartcampus.ac.provider.AcServiceException;
-import eu.trentorise.smartcampus.ac.provider.filters.AcClient;
-import eu.trentorise.smartcampus.ac.provider.model.User;
+import eu.trentorise.smartcampus.common.SemanticHelper;
 import eu.trentorise.smartcampus.exceptions.SmartCampusException;
 import eu.trentorise.smartcampus.profileservice.model.ExtendedProfile;
+import eu.trentorise.smartcampus.social.SocialEngineConnector;
+import eu.trentorise.smartcampus.social.model.User;
 
 /**
  * @author mirko perillo
  * 
  */
 @Component
-public class PermissionManager {
+public class PermissionManager extends SocialEngineConnector {
 
 	private static final Logger logger = Logger
 			.getLogger(PermissionManager.class);
 
-	@Autowired
-	private AcClient acClient;
-
 	public boolean checkExtendedProfilePermission(User user,
 			ExtendedProfile profile) throws SmartCampusException {
 		try {
-
-			return acClient.canReadResource(user.getAuthToken(),
-					"" + profile.getSocialId());
-		} catch (AcServiceException e) {
+			return SemanticHelper.isEntitySharedWithUser(socialEngineClient, Long.parseLong(user.getSocialId()), Long.parseLong(profile.getSocialId()));
+		} catch (Exception e) {
 			String msg = String.format(
 					"Error checking if user %s can access profile %s",
 					user.getId(), profile.getId());

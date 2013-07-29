@@ -17,28 +17,29 @@ package eu.trentorise.smartcampus.profileservice.managers;
 
 import it.unitn.disi.sweb.webapi.client.WebApiException;
 import it.unitn.disi.sweb.webapi.model.entity.Entity;
+import it.unitn.disi.sweb.webapi.model.entity.EntityBase;
+import it.unitn.disi.sweb.webapi.model.smartcampus.livetopics.LiveTopic;
+import it.unitn.disi.sweb.webapi.model.smartcampus.livetopics.LiveTopicContentType;
+import it.unitn.disi.sweb.webapi.model.smartcampus.livetopics.LiveTopicSource;
+import it.unitn.disi.sweb.webapi.model.smartcampus.livetopics.LiveTopicStatus;
+import it.unitn.disi.sweb.webapi.model.smartcampus.livetopics.LiveTopicSubject;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import eu.trentorise.smartcampus.ac.provider.model.Attribute;
-import eu.trentorise.smartcampus.ac.provider.model.User;
 import eu.trentorise.smartcampus.common.SemanticHelper;
 import eu.trentorise.smartcampus.exceptions.AlreadyExistException;
 import eu.trentorise.smartcampus.exceptions.SmartCampusException;
 import eu.trentorise.smartcampus.presentation.common.exception.DataException;
 import eu.trentorise.smartcampus.presentation.common.exception.NotFoundException;
-import eu.trentorise.smartcampus.profileservice.converters.ProfileConverter;
-import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.profileservice.model.ExtendedProfile;
 import eu.trentorise.smartcampus.profileservice.storage.ProfileStorage;
-import eu.trentorise.smartcampus.profileservice.storage.StoreProfile;
 import eu.trentorise.smartcampus.social.SocialEngineConnector;
+import eu.trentorise.smartcampus.social.model.User;
 
 /**
  * <i>ProfileManager</i> manages the
@@ -53,93 +54,14 @@ public class ProfileManager extends SocialEngineConnector {
 
 	private static final Logger logger = Logger.getLogger(ProfileManager.class);
 
-	// constants to retrieve name and surname attributest
-	private static final String nameAttribute = "eu.trentorise.smartcampus.givenname";
-	private static final String surnameAttribute = "eu.trentorise.smartcampus.surname";
-
 	@Autowired
 	private ProfileStorage storage;
 
-	/**
-	 * returns all minimal eu.trentorise.smartcampus.profileservice.model of
-	 * users who match part of name
-	 * 
-	 * @param name
-	 *            the string to match with name of user
-	 * @return the list of minimal
-	 *         eu.trentorise.smartcampus.profileservice.model of users which
-	 *         name contains parameter or an empty list
-	 * @throws CommunityManagerException
-	 */
-	public List<BasicProfile> getUsers(String name)
-			throws CommunityManagerException {
-		try {
-			return ProfileConverter.toBasicProfile(storage.findByName(name));
-		} catch (Exception e) {
-			throw new CommunityManagerException();
-		}
-	}
-
-	/**
-	 * returns all users eu.trentorise.smartcampus.profileservice.model in the
-	 * system
-	 * 
-	 * @return the list of all minimal profiles of users
-	 * @throws CommunityManagerException
-	 */
-	public List<BasicProfile> getUsers() throws CommunityManagerException {
-		try {
-			return ProfileConverter.toBasicProfile((List<StoreProfile>) storage
-					.getObjectsByType(StoreProfile.class));
-		} catch (Exception e) {
-			logger.error("Exception getting system users");
-			throw new CommunityManagerException();
-		}
-	}
-
-	public List<BasicProfile> getUsers(List<String> userIds)
-			throws CommunityManagerException {
-		try {
-			return ProfileConverter.toBasicProfile((List<StoreProfile>) storage
-					.findByUserIds(userIds));
-		} catch (Exception e) {
-			logger.error("Exception getting system users");
-			throw new CommunityManagerException();
-		}
-	}
-
-	/**
-	 * persists a eu.trentorise.smartcampus.profileservice.model
-	 * 
-	 * @param storeProfile
-	 *            the eu.trentorise.smartcampus.profileservice.model to persist
-	 * @return the stored eu.trentorise.smartcampus.profileservice.model
-	 * @throws CommunityManagerException
-	 */
-	public StoreProfile create(StoreProfile storeProfile)
-			throws CommunityManagerException {
-		try {
-			storeProfile.setFullname(createFullName(storeProfile));
-			StoreProfile present = getStoreProfileByUserId(storeProfile
-					.getUserId());
-			if (present != null) {
-				ProfileConverter.copyDifferences(storeProfile, present);
-				storage.updateObject(present);
-				storeProfile = present;
-			} else {
-				storage.storeObject(storeProfile);
-				storeProfile = getStoreProfileByUserId(storeProfile.getUserId());
-			}
-			return storeProfile;
-		} catch (Exception e) {
-			throw new CommunityManagerException();
-		}
-	}
-
+	private Long profileType;
 	/**
 	 * persists a custom profile for the given user
 	 * 
-	 * @param user
+	 * @param userId
 	 *            user owner of extended profile
 	 * @param extProfile
 	 *            custom profile to persist
@@ -149,16 +71,9 @@ public class ProfileManager extends SocialEngineConnector {
 	 * @throws SmartCampusException
 	 */
 	public ExtendedProfile create(User user, ExtendedProfile extProfile)
-			throws CommunityManagerException, AlreadyExistException,
+			throws ProfileServiceException, AlreadyExistException,
 			SmartCampusException {
-		// check if user and extProfile informations are consistent
-		if (extProfile.getUserId() == null
-				|| !user.getId().equals(new Long(extProfile.getUserId()))) {
-			String msg = String.format("Extended profile and user %s mismatch",
-					user.getId());
-			logger.error(msg);
-			throw new SmartCampusException(msg);
-		}
+
 		ExtendedProfile present = storage.findExtendedProfile(
 				extProfile.getUserId(), extProfile.getAppId(),
 				extProfile.getProfileId());
@@ -174,12 +89,12 @@ public class ProfileManager extends SocialEngineConnector {
 		try {
 			Entity entity = SemanticHelper.createEntity(
 					socialEngineClient,
-					user.getSocialId(),
+					Long.parseLong(user.getSocialId()),
 					"profile",
 					"profileId:" + extProfile.getProfileId(),
 					"appId:" + extProfile.getAppId() + ",userId:"
 							+ extProfile.getUserId(), null, null);
-			extProfile.setSocialId(entity.getId());
+			extProfile.setSocialId(entity.getId().toString());
 		} catch (WebApiException e1) {
 			logger.error("Exception creating profile entity", e1);
 			throw new SmartCampusException(
@@ -212,7 +127,7 @@ public class ProfileManager extends SocialEngineConnector {
 			return deleteExtendedProfile(storage.getObjectById(extProfileId,
 					ExtendedProfile.class));
 		} catch (DataException e) {
-			String msg = String.format("Exception getting extended profile %s",
+			String msg = String.format("Exception deleting extended profile %s",
 					extProfileId);
 			logger.error(msg, e);
 			throw new SmartCampusException(msg);
@@ -230,15 +145,16 @@ public class ProfileManager extends SocialEngineConnector {
 		try {
 			try {
 				if (!SemanticHelper.deleteEntity(socialEngineClient,
-						extProfile.getSocialId())) {
+						Long.parseLong(extProfile.getSocialId()))) {
 					logger.warn(String
-							.format("Error deleting entity %s binded to extended profile %s",
+							.format("Error deleting entity %s bonded to extended profile %s",
 									extProfile.getSocialId(),
 									extProfile.getId()));
 				}
 			} catch (WebApiException e) {
+				e.printStackTrace();
 				logger.warn(String
-						.format("Error deleting entity %s binded to extended profile %s",
+						.format("Error deleting entity %s bond to extended profile %s",
 								extProfile.getSocialId(), extProfile.getId()));
 			}
 
@@ -255,147 +171,56 @@ public class ProfileManager extends SocialEngineConnector {
 	}
 
 	/**
-	 * Deletes a eu.trentorise.smartcampus.profileservice.model
-	 * 
-	 * @param storeProfile
-	 *            eu.trentorise.smartcampus.profileservice.model to delete
-	 * @return true if operation gone fine. false otherwise
-	 * @throws CommunityManagerException
+	 * @param ownerId
+	 * @return list of profile entityIds shared with the specified user
 	 */
-	public boolean delete(StoreProfile storeProfile)
-			throws CommunityManagerException {
+	public List<Long> getShared(String ownerId) {
 		try {
-			storage.deleteObject(storeProfile);
-			return true;
-		} catch (DataException e) {
-			throw new CommunityManagerException();
-		}
-	}
-
-	/**
-	 * updates a eu.trentorise.smartcampus.profileservice.model
-	 * 
-	 * @param storeProfile
-	 *            eu.trentorise.smartcampus.profileservice.model to update
-	 * @return true if operation gone fine, false otherwise
-	 * @throws CommunityManagerException
-	 */
-	public boolean update(StoreProfile storeProfile)
-			throws CommunityManagerException {
-		try {
-			storeProfile.setFullname(createFullName(storeProfile));
-			storage.updateObject(storeProfile);
-			return true;
-		} catch (Exception e) {
-			throw new CommunityManagerException();
-		}
-	}
-
-	private String createFullName(StoreProfile storeProfile) {
-		if (storeProfile != null) {
-			return ((storeProfile.getName() == null ? "" : storeProfile
-					.getName()) + " " + (storeProfile.getSurname() == null ? ""
-					: storeProfile.getSurname())).trim();
-		}
-		return "";
-	}
-
-	/**
-	 * returns the MinimalProfile of a given user
-	 * 
-	 * @param userId
-	 *            id of user
-	 * @return MinimalProfile of user or null if it doesn't exist
-	 * @throws CommunityManagerException
-	 */
-	public BasicProfile getBasicProfileById(String userId)
-			throws CommunityManagerException {
-		Map<String, Object> filter = new HashMap<String, Object>();
-		filter.put("userId", userId);
-		BasicProfile profile = null;
-		try {
-			profile = ProfileConverter.toBasicProfile(storage.searchObjects(
-					StoreProfile.class, filter).get(0));
-		} catch (IndexOutOfBoundsException e) {
-			return null;
-		} catch (Exception e) {
-			throw new CommunityManagerException();
-		}
-
-		return profile;
-	}
-
-	public BasicProfile getProfileByUserId(String userId)
-			throws CommunityManagerException {
-		BasicProfile model = null;
-		try {
-			model = ProfileConverter
-					.toBasicProfile(getStoreProfileByUserId(userId));
-		} catch (NullPointerException e) {
-			return null;
-		} catch (Exception e) {
-			throw new CommunityManagerException();
-		}
-
-		return model;
-	}
-
-	/**
-	 * returns a StoreProfile given user id
-	 * 
-	 * @param userId
-	 *            user id
-	 * @return the StoreProfile or null if doesn't exist
-	 * @throws CommunityManagerException
-	 */
-	public StoreProfile getStoreProfileByUserId(String userId)
-			throws CommunityManagerException {
-		Map<String, Object> filter = new HashMap<String, Object>();
-		filter.put("userId", userId);
-		try {
-			return storage.searchObjects(StoreProfile.class, filter).get(0);
-		} catch (IndexOutOfBoundsException e) {
-			return null;
-		} catch (Exception e) {
-			throw new CommunityManagerException();
-		}
-
-	}
-
-	private String retrieveAttribute(User user, String attributeKey) {
-		String attributeValue = null;
-		for (Attribute attr : user.getAttributes()) {
-			if (attr.getKey().equals(attributeKey)) {
-				attributeValue = attr.getValue();
+			LiveTopic filter = new LiveTopic();
+			LiveTopicSource filterSource = new LiveTopicSource();
+			Long actorId = Long.parseLong(ownerId);
+			if (actorId > 0) {
+				filter.setActorId(actorId); // <-- mandatory
 			}
+			filterSource.setAllKnownCommunities(true);
+			filterSource.setAllKnownUsers(true);
+			filterSource.setAllCommunities(true);
+			filterSource.setAllUsers(true);
+			
+			filter.setSource(filterSource);
+			LiveTopicSubject subject = new LiveTopicSubject();
+			subject.setAllSubjects(true); // <-- important
+			filter.setSubjects(Collections.singleton(subject));
+
+			LiveTopicContentType type = new LiveTopicContentType();
+			type.setEntityTypeIds(Collections.singleton(getProfileType(actorId)));
+			filter.setType(type); // <-- mandatory
+			filter.setStatus(LiveTopicStatus.ACTIVE); // <-- mandatory
+			List<Long> sharedIds = socialEngineClient.computeEntitiesForLiveTopic(filter, null, null);
+			return sharedIds;
+		} catch (WebApiException e) {
+			logger.error("Exception getting user shared content", e);
+			return Collections.emptyList();
 		}
-		return attributeValue;
 	}
 
-	public BasicProfile getOrCreateProfile(User user)
-			throws CommunityManagerException {
-		String userId = Long.toString(user.getId());
-		BasicProfile model = getProfileByUserId(userId);
-		// if model is null, system creates one using name and surname
-		// from authentication process (if these fields are populated)
-		if (model == null) {
-			String nameValue = retrieveAttribute(user, nameAttribute);
-			String surnameValue = retrieveAttribute(user, surnameAttribute);
-			if (nameValue != null && surnameValue != null) {
-				StoreProfile storeProfile = new StoreProfile();
-				storeProfile.setName(nameValue);
-				storeProfile.setSurname(surnameValue);
-				storeProfile.setFullname(createFullName(storeProfile));
-				storeProfile.setSocialId(user.getSocialId());
-				storeProfile.setUserId(userId);
-				storeProfile.setUser(userId);
-				storeProfile.setUpdateTime(System.currentTimeMillis());
-				create(storeProfile);
-				model = getProfileByUserId(userId);
-			}
-
+	private Long getProfileType(Long actorId) throws WebApiException {
+		if (profileType == null) {
+			profileType = socialEngineClient.readEntityType("profile", getEntityBase(actorId).getKbLabel()).getId();
 		}
-		return model;
+		return profileType;
+	}
+	
+	private EntityBase getEntityBase(Long actorId) throws WebApiException {
+		it.unitn.disi.sweb.webapi.model.smartcampus.social.User actor = socialEngineClient.readUser(actorId);
+		if (actor == null) {
+			throw new WebApiException("Actor with id " + actorId + " is not found.");
+		}
+		Long ebid = actor.getEntityBaseId();
+		if (ebid == null) {
+			throw new WebApiException("Actor with id " + actorId + " has null entitybase reference");
+		}
+		return socialEngineClient.readEntityBase(ebid);
 	}
 
 }
