@@ -66,7 +66,6 @@ public class ProfileManagerTest {
 		user.setId("1");
 		user.setSocialId(socialUser.getId().toString());
 		ExtendedProfile p = new ExtendedProfile();
-		p.setAppId("appId");
 		p.setProfileId("profileId");
 		p.setUserId("1");
 		Map<String, Object> content = new HashMap<String, Object>();
@@ -85,11 +84,11 @@ public class ProfileManagerTest {
 			DataException, ProfileServiceException {
 
 		// cleaning
-		for (ExtendedProfile extP : storage.findExtendedProfiles("10", "appId")) {
+		for (ExtendedProfile extP : storage.findExtendedProfiles("10")) {
 			storage.deleteExtendedProfile(extP.getId());
 		}
 
-		for (ExtendedProfile extP : storage.findExtendedProfiles("15", "appId")) {
+		for (ExtendedProfile extP : storage.findExtendedProfiles("15")) {
 			storage.deleteExtendedProfile(extP.getId());
 		}
 		User socialUser = socialOperation.createUser();
@@ -101,7 +100,6 @@ public class ProfileManagerTest {
 
 		// profile user 1
 		ExtendedProfile profile = new ExtendedProfile();
-		profile.setAppId("appId");
 		profile.setUserId("10");
 		profile.setProfileId("preferences");
 		Map<String, Object> m = new HashMap<String, Object>();
@@ -116,7 +114,6 @@ public class ProfileManagerTest {
 
 		// profile user2
 		profile = new ExtendedProfile();
-		profile.setAppId("appId");
 		profile.setProfileId("preferences");
 		profile.setUserId("15");
 		m = new HashMap<String, Object>();
@@ -126,7 +123,7 @@ public class ProfileManagerTest {
 
 		Map<String, Object> filter = new HashMap<String, Object>();
 		filter.put("pref1", "value");
-		List<ExtendedProfile> list = storage.findExtendedProfiles("appId", "preferences", filter);
+		List<ExtendedProfile> list = storage.findExtendedProfiles("preferences", filter);
 		Assert.assertEquals(list.size(), 2);
 
 		socialOperation.deleteUser(socialUser.getId());
@@ -142,7 +139,7 @@ public class ProfileManagerTest {
 
 		try {
 			// cleaning
-			for (ExtendedProfile extP : storage.findExtendedProfiles("10", "appId")) {
+			for (ExtendedProfile extP : storage.findExtendedProfiles("10")) {
 				storage.deleteExtendedProfile(extP.getId());
 			}
 
@@ -153,7 +150,6 @@ public class ProfileManagerTest {
 
 			// profile user 1
 			ExtendedProfile profile = new ExtendedProfile();
-			profile.setAppId("appId");
 			profile.setUserId("10");
 			profile.setProfileId("preferences");
 			Map<String, Object> m = new HashMap<String, Object>();

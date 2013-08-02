@@ -31,11 +31,10 @@ public class ProfileStorage extends BasicObjectSyncMongoStorage {
 	public ProfileStorage(MongoOperations mongoTemplate) {
 		super(mongoTemplate);
 	}
-	public ExtendedProfile findExtendedProfile(String userId, String appId,
-			String profileId) {
+	public ExtendedProfile findExtendedProfile(String userId, String profileId) {
 		Criteria criteria = new Criteria();
 		criteria = Criteria.where("content.userId").is(userId)
-				.and("content.appId").is(appId).and("content.profileId")
+				.and("content.profileId")
 				.is(profileId);
 		criteria.and("type").is(ExtendedProfile.class.getCanonicalName());
 		criteria.and("deleted").is(false);
@@ -49,19 +48,6 @@ public class ProfileStorage extends BasicObjectSyncMongoStorage {
 		}
 	}
 
-	public List<ExtendedProfile> findExtendedProfiles(String userId,
-			String appId) {
-		Criteria criteria = new Criteria();
-		criteria = Criteria.where("content.userId").is(userId)
-				.and("content.appId").is(appId);
-		criteria.and("type").is(ExtendedProfile.class.getCanonicalName());
-		criteria.and("deleted").is(false);
-
-		List<ExtendedProfile> profiles = find(Query.query(criteria),
-				ExtendedProfile.class);
-		return profiles;
-	}
-
 	public List<ExtendedProfile> findExtendedProfiles(String userId) {
 		Criteria criteria = new Criteria();
 		criteria = Criteria.where("content.userId").is(userId);
@@ -73,11 +59,9 @@ public class ProfileStorage extends BasicObjectSyncMongoStorage {
 		return profiles;
 	}
 
-	public List<ExtendedProfile> findExtendedProfiles(String appId,
-			String profileId, Map<String, Object> profileAttrs) {
+	public List<ExtendedProfile> findExtendedProfiles(String profileId, Map<String, Object> profileAttrs) {
 		Criteria criteria = new Criteria();
-		criteria = Criteria.where("content.profileId").is(profileId)
-				.and("content.appId").is(appId);
+		criteria = Criteria.where("content.profileId").is(profileId);
 		for (String key : profileAttrs.keySet()) {
 			criteria.and("content.content." + key).is(profileAttrs.get(key));
 		}
@@ -93,12 +77,10 @@ public class ProfileStorage extends BasicObjectSyncMongoStorage {
 		deleteObjectById(extProfileId);
 	}
 
-	public void deleteExtendedProfile(String userId, String appId,
-			String profileId) throws DataException {
+	public void deleteExtendedProfile(String userId, String profileId) throws DataException {
 		Criteria criteria = new Criteria();
 		criteria = Criteria.where("content.userId").is(userId)
-				.and("content.appId").is(appId).and("content.profileId")
-				.is(profileId);
+				.and("content.profileId").is(profileId);
 		criteria.and("type").is(ExtendedProfile.class.getCanonicalName());
 		criteria.and("deleted").is(false);
 
@@ -111,10 +93,9 @@ public class ProfileStorage extends BasicObjectSyncMongoStorage {
 	/**
 	 * @param entityId
 	 */
-	public ExtendedProfile getObjectByEntityId(Long entityId, String appId, String profileId) {
+	public ExtendedProfile getObjectByEntityId(Long entityId, String profileId) {
 		Criteria criteria = new Criteria();
 		criteria = Criteria.where("content.socialId").is(entityId);
-		if (appId != null) criteria.and("content.appId").is(appId);
 		if (profileId != null) criteria.and("content.profileId").is(profileId);
 		criteria.and("type").is(ExtendedProfile.class.getCanonicalName());
 		criteria.and("deleted").is(false);

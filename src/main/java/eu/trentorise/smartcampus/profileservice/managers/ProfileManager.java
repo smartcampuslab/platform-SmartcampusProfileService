@@ -75,12 +75,12 @@ public class ProfileManager extends SocialEngineConnector {
 			SmartCampusException {
 
 		ExtendedProfile present = storage.findExtendedProfile(
-				extProfile.getUserId(), extProfile.getAppId(),
+				extProfile.getUserId(), 
 				extProfile.getProfileId());
 		if (present != null) {
 			String msg = String
-					.format("extended profile exists userId:%s, appId:%s, profileId:%s",
-							extProfile.getUserId(), extProfile.getAppId(),
+					.format("extended profile exists userId:%s, profileId:%s",
+							extProfile.getUserId(), 
 							extProfile.getProfileId());
 			logger.error(msg);
 			throw new AlreadyExistException(msg);
@@ -92,8 +92,7 @@ public class ProfileManager extends SocialEngineConnector {
 					Long.parseLong(user.getSocialId()),
 					"profile",
 					"profileId:" + extProfile.getProfileId(),
-					"appId:" + extProfile.getAppId() + ",userId:"
-							+ extProfile.getUserId(), null, null);
+					null, null, null);
 			extProfile.setSocialId(entity.getId().toString());
 		} catch (WebApiException e1) {
 			logger.error("Exception creating profile entity", e1);
@@ -158,8 +157,7 @@ public class ProfileManager extends SocialEngineConnector {
 								extProfile.getSocialId(), extProfile.getId()));
 			}
 
-			storage.deleteExtendedProfile(extProfile.getUserId(),
-					extProfile.getAppId(), extProfile.getProfileId());
+			storage.deleteExtendedProfile(extProfile.getUserId(), extProfile.getProfileId());
 			return true;
 		} catch (DataException e) {
 			String msg = String.format(

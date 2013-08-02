@@ -26,7 +26,6 @@ public class ExtendedProfile extends BasicObject {
 
 	private static final long serialVersionUID = -6213454306656243304L;
 
-	private String appId;
 	/**
 	 * profile label
 	 */
@@ -39,14 +38,6 @@ public class ExtendedProfile extends BasicObject {
 	 * profile social id
 	 */
 	private String socialId;
-
-	public String getAppId() {
-		return appId;
-	}
-
-	public void setAppId(String appId) {
-		this.appId = appId;
-	}
 
 	public String getProfileId() {
 		return profileId;

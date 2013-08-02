@@ -10,32 +10,23 @@
 	xsi:noNamespaceSchemaLocation="../../../../resource.api/src/main/resources/jaxb/binding/resourceTemplateSchema.xsd">
 
     <resource id="profile"/>
-    <resource id="app"/>
 
-	<resourceMapping uri="smartcampus.extprofile.write.{app}.{profile}" pathPattern="/extprofile/app/{userId}/{app}/{profile}"/>
+	<resourceMapping uri="smartcampus.extprofile.write.{profile}" pathPattern="/extprofile/app/{userId}/{profile}"/>
 
-	<resourceMapping uri="smartcampus.extprofile.me.read"
-		pathPattern="/extprofile/me"/>
-	<resourceMapping uri="smartcampus.extprofile.me.{app}.read"
-		pathPattern="/extprofile/me/{app}"/>
-	<resourceMapping uri="smartcampus.extprofile.me.{app}.{profile}.read"
-		pathPattern="/extprofile/me/{app}/{profile}" method="GET"/>
-    <resourceMapping uri="smartcampus.extprofile.me.{app}.{profile}.write"
-        pathPattern="/extprofile/me/{app}/{profile}" method="POST,PUT,DELETE"/>
+	<resourceMapping uri="smartcampus.extprofile.me.read" pathPattern="/extprofile/me"/>
+	<resourceMapping uri="smartcampus.extprofile.me.{profile}.read" pathPattern="/extprofile/me/{profile}" method="GET"/>
+    <resourceMapping uri="smartcampus.extprofile.me.{profile}.write"
+        pathPattern="/extprofile/me/{profile}" method="POST,PUT,DELETE"/>
 
 	<resourceMapping uri="smartcampus.extprofile.shared.read"
 		pathPattern="/extprofile/shared"/>
-	<resourceMapping uri="smartcampus.extprofile.shared.{app}.read" 
-		pathPattern="/extprofile/shared/{app}"/>
-	<resourceMapping uri="smartcampus.extprofile.shared.{app}.{profile}.read"
-		pathPattern="/extprofile/shared/{app}/{profile}"/>
+	<resourceMapping uri="smartcampus.extprofile.shared.{profile}.read"
+		pathPattern="/extprofile/shared/{profile}"/>
 
 	<resourceMapping uri="smartcampus.extprofile.all.read" 
 		pathPattern="/extprofile/all"/>
-	<resourceMapping uri="smartcampus.extprofile.all.{app}.read" 
-		pathPattern="/extprofile/all/{app}"/>
-	<resourceMapping uri="smartcampus.extprofile.all.{app}.{profile}.read"
-		pathPattern="/extprofile/all/{app}/{profile}"/>
+	<resourceMapping uri="smartcampus.extprofile.all.{profile}.read"
+		pathPattern="/extprofile/all/{profile}"/>
 
 </service>
 
