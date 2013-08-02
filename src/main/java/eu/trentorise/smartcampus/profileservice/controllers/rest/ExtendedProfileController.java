@@ -318,7 +318,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws ProfileServiceException
 	 */
-	@RequestMapping(method = RequestMethod.PUT, value = "/extprofile/app/{userId}/{{profileId}")
+	@RequestMapping(method = RequestMethod.PUT, value = "/extprofile/app/{userId}/{profileId}")
 	public void updateExtendedProfile(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("userId") String userId,
