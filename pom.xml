@@ -67,7 +67,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>profileservice</finalName>
+		<finalName>core.profile</finalName>
 	</build>
 
 	<repositories>
