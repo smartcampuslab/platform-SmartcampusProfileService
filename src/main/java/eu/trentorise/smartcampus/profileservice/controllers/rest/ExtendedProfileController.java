@@ -84,7 +84,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws ProfileServiceException
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/extprofile/app/{userId}/{profileId}")
+	@RequestMapping(method = RequestMethod.POST, value = "/extprofile/app/{userId}/{profileId:.*}")
 	public void createExtendedProfile(HttpServletResponse response,
 			@PathVariable("userId") String userId,
 			@PathVariable("profileId") String profileId,
@@ -135,7 +135,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws ProfileServiceException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/app/{userId}/{profileId}")
+	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/app/{userId}/{profileId:.*}")
 	public @ResponseBody
 	ExtendedProfile getExtendedProfile(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -164,7 +164,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws ProfileServiceException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/me/{profileId}")
+	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/me/{profileId:.*}")
 	public @ResponseBody
 	ExtendedProfile getMyExtendedProfile(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -220,7 +220,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws ProfileServiceException
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/extprofile/all/{profileId}")
+	@RequestMapping(method = RequestMethod.POST, value = "/extprofile/all/{profileId:.*}")
 	public @ResponseBody
 	ExtendedProfiles getUsersExtendedProfilesByAttributes(
 			HttpServletRequest request, HttpServletResponse response,
@@ -275,7 +275,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws ProfileServiceException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/all/{profileId}")
+	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/all/{profileId:.*}")
 	public @ResponseBody
 	ExtendedProfiles getUsersAppProfileExtendedProfiles(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -318,7 +318,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws ProfileServiceException
 	 */
-	@RequestMapping(method = RequestMethod.PUT, value = "/extprofile/app/{userId}/{profileId}")
+	@RequestMapping(method = RequestMethod.PUT, value = "/extprofile/app/{userId}/{profileId:.*}")
 	public void updateExtendedProfile(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("userId") String userId,
@@ -354,7 +354,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws ProfileServiceException
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/extprofile/me/{profileId}")
+	@RequestMapping(method = RequestMethod.POST, value = "/extprofile/me/{profileId:.*}")
 	public void createMyExtendedProfile(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("profileId") String profileId,
@@ -393,7 +393,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws ProfileServiceException
 	 */
-	@RequestMapping(method = RequestMethod.PUT, value = "/extprofile/me/{profileId}")
+	@RequestMapping(method = RequestMethod.PUT, value = "/extprofile/me/{profileId:.*}")
 	public void updateMyExtendedProfile(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("profileId") String profileId,
@@ -428,7 +428,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws ProfileServiceException
 	 */
-	@RequestMapping(method = RequestMethod.DELETE, value = "/extprofile/app/{userId}/{profileId}")
+	@RequestMapping(method = RequestMethod.DELETE, value = "/extprofile/app/{userId}/{profileId:.*}")
 	public void deleteExtendedProfile(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("userId") String userId,
@@ -452,7 +452,7 @@ public class ExtendedProfileController extends SCController {
 	 * @throws IOException
 	 * @throws ProfileServiceException
 	 */
-	@RequestMapping(method = RequestMethod.DELETE, value = "/extprofile/me/{profileId}")
+	@RequestMapping(method = RequestMethod.DELETE, value = "/extprofile/me/{profileId:.*}")
 	public void deleteMyExtendedProfile(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("profileId") String profileId) throws IOException,
@@ -468,7 +468,7 @@ public class ExtendedProfileController extends SCController {
 	 * @param profileId
 	 * @return all profiles of specific profile type shared with the current user
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/shared/{profileId}")
+	@RequestMapping(method = RequestMethod.GET, value = "/extprofile/shared/{profileId:.*}")
 	public @ResponseBody ExtendedProfiles getProfileSharedExtendedProfile(@PathVariable("profileId") String profileId) 
 	{
 		return getSharedProfiles(getUserObject(getUserId()).getSocialId(), profileId);
